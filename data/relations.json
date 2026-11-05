@@ -40,8 +40,8 @@
     "relation": "Xét nghiệm",
     "tail": "Glucose lúc đói",
     "aliases": [
-      "glucose luc doi",
       "duong huyet luc doi",
+      "glucose luc doi",
       "nhin an"
     ]
   },
@@ -65,52 +65,178 @@
     "aliases": [
       "van dong",
       "di bo",
-      "hoat dong the luc"
+      "hoat dong the luc",
+      "tap the duc"
     ]
   },
   {
     "id": "K07",
     "head": "Dinh dưỡng",
-    "relation": "Phương pháp",
-    "tail": "Mô hình đĩa ăn",
+    "relation": "Lựa chọn",
+    "tail": "Thực phẩm giàu chất xơ",
     "aliases": [
-      "dia an",
-      "chia dia",
+      "che do an",
+      "an gi",
       "tinh bot",
+      "thuc don",
+      "dinh duong",
       "an uong lanh manh"
     ]
   },
   {
     "id": "K08",
     "head": "Dinh dưỡng",
-    "relation": "Lựa chọn",
-    "tail": "Đồ uống không đường",
+    "relation": "Đồ uống",
+    "tail": "Nước lọc",
     "aliases": [
       "do uong",
       "nuoc loc",
       "nuoc ngot",
-      "nuoc khong duong"
+      "tra sua"
     ]
   },
   {
     "id": "K09",
-    "head": "Đái tháo đường",
-    "relation": "Theo dõi",
-    "tail": "Trao đổi về xét nghiệm",
+    "head": "Theo dõi",
+    "relation": "Ghi nhận",
+    "tail": "Thời điểm đo glucose",
     "aliases": [
-      "theo doi",
-      "kiem tra duong huyet"
+      "theo doi duong huyet",
+      "thoi diem do",
+      "sau an",
+      "ghi lai"
     ]
   },
   {
     "id": "K10",
-    "head": "Phòng ngừa típ 2",
-    "relation": "Can thiệp",
-    "tail": "Thay đổi lối sống",
+    "head": "Đái tháo đường típ 2",
+    "relation": "Hỗ trợ",
+    "tail": "Hoạt động thể lực",
     "aliases": [
-      "loi song",
-      "thay doi thoi quen",
-      "can thiep du phong"
+      "tap the duc khi bi tieu duong",
+      "luyen tap"
+    ]
+  },
+  {
+    "id": "K11",
+    "head": "Đái tháo đường típ 2",
+    "relation": "Tình trạng liên quan",
+    "tail": "Tiền đái tháo đường",
+    "aliases": [
+      "tien tieu duong",
+      "tien dai thao duong",
+      "tien dai"
+    ]
+  },
+  {
+    "id": "K12",
+    "head": "Hạ đường huyết",
+    "relation": "Triệu chứng",
+    "tail": "Vã mồ hôi, hồi hộp, chóng mặt",
+    "aliases": [
+      "ha duong huyet",
+      "tut duong",
+      "va mo hoi",
+      "hoi hop"
+    ]
+  },
+  {
+    "id": "K13",
+    "head": "Đái tháo đường",
+    "relation": "Biến chứng",
+    "tail": "Mắt, thận, thần kinh và tim mạch",
+    "aliases": [
+      "bien chung",
+      "ton thuong than",
+      "vong mac",
+      "ton thuong than kinh"
+    ]
+  },
+  {
+    "id": "K14",
+    "head": "Đái tháo đường típ 2",
+    "relation": "Yếu tố nguy cơ",
+    "tail": "Hút thuốc",
+    "aliases": [
+      "hut thuoc",
+      "thuoc la",
+      "cai thuoc"
+    ]
+  },
+  {
+    "id": "K15",
+    "head": "Đái tháo đường típ 2",
+    "relation": "Yếu tố nguy cơ",
+    "tail": "Béo phì và kháng insulin",
+    "aliases": [
+      "beo phi",
+      "bmi",
+      "khang insulin",
+      "thua can"
+    ]
+  },
+  {
+    "id": "K16",
+    "head": "Đái tháo đường",
+    "relation": "Phân loại",
+    "tail": "Đái tháo đường típ 1",
+    "aliases": [
+      "tip 1",
+      "tuyp 1",
+      "type 1"
+    ]
+  },
+  {
+    "id": "K17",
+    "head": "Đái tháo đường",
+    "relation": "Phân loại",
+    "tail": "Đái tháo đường típ 2",
+    "aliases": [
+      "tip 2",
+      "tuyp 2",
+      "type 2"
+    ]
+  },
+  {
+    "id": "K18",
+    "head": "Metformin",
+    "relation": "Nhóm sử dụng",
+    "tail": "Điều trị đái tháo đường típ 2",
+    "aliases": [
+      "metformin",
+      "thuoc metformin"
+    ]
+  },
+  {
+    "id": "K19",
+    "head": "Gliclazide",
+    "relation": "Lưu ý",
+    "tail": "Nguy cơ hạ đường huyết",
+    "aliases": [
+      "gliclazide",
+      "dorocron"
+    ]
+  },
+  {
+    "id": "K20",
+    "head": "Dapagliflozin",
+    "relation": "Phân nhóm",
+    "tail": "Ức chế SGLT2",
+    "aliases": [
+      "dapagliflozin",
+      "forxiga",
+      "sglt2"
+    ]
+  },
+  {
+    "id": "K21",
+    "head": "Đái tháo đường típ 2",
+    "relation": "Yếu tố nguy cơ",
+    "tail": "Tuổi, gia đình và ít vận động",
+    "aliases": [
+      "yeu to nguy co",
+      "tien su gia dinh",
+      "di truyen"
     ]
   }
 ]

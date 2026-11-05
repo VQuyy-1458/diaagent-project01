@@ -18,7 +18,10 @@ FAQ = {
     "OGTT là gì?": "K03",
     "Đường huyết lúc đói là gì?": "K04",
     "Triệu chứng thường gặp là gì?": "K05",
-    "Mô hình đĩa ăn là gì?": "K07",
+    "Người đái tháo đường nên chọn thực phẩm nào?": "K07",
+    "Tiền đái tháo đường là gì?": "K11",
+    "Hạ đường huyết có biểu hiện gì?": "K12",
+    "Metformin là thuốc gì?": "K18",
     "Vận động liên quan thế nào đến phòng ngừa típ 2?": "K06",
 }
 BOUNDS = [(0,20),(1,250),(1,150),(1,110),(1,900),(1,80),(0,3),(21,100)]
@@ -65,9 +68,10 @@ def graph(*, use_neo4j=True):
         records, _, _ = driver.execute_query("""
             MATCH (p:P1Passage)-[:ABOUT]->(t:P1Topic),
                   (p)-[:FROM_SOURCE]->(s:P1Source)
+            WHERE p.id IN keys($current) AND s.url = $current[p.id]
             RETURN p.id AS id, p.title AS title, p.text AS text, p.keys AS keys,
                    t.name AS topic, s.url AS url, s.name AS source ORDER BY id
-            """, **options)
+            """, current={row["id"]:row["url"] for row in docs}, **options)
         edges, _, _ = driver.execute_query("""
             MATCH (head:P1Concept)-[r:KNOWLEDGE_LINK]->(tail:P1Concept)
                   -[:SUPPORTED_BY]->(p:P1Passage)
@@ -75,7 +79,12 @@ def graph(*, use_neo4j=True):
             RETURN p.id AS id, head.name AS head, r.kind AS relation,
                    tail.name AS tail, r.aliases AS aliases ORDER BY id
             """, **options)
-    return [dict(row) for row in records], [dict(row) for row in edges], "Neo4j"
+    expected = {row["id"]:(row["head"],row["relation"],row["tail"]) for row in relations}
+    valid = {row["id"]: dict(row) for row in edges
+             if expected.get(row["id"]) == (row["head"],row["relation"],row["tail"])}
+    if len(records) != len(docs) or len(valid) != len(relations):
+        raise RuntimeError("Neo4j chưa đồng bộ kho tri thức hiện tại.")
+    return [dict(row) for row in records], list(valid.values()), "Neo4j"
 
 
 
@@ -99,9 +108,12 @@ class KnowledgeAgent:
                    "nghiem phap dung nap duong": "ogtt glucose",
                    "an uong lanh manh": "dinh duong dia an"}
         additions = [v for phrase,v in aliases.items() if phrase in normalized]
-        q = self.vector(Counter(words(" ".join([question, *additions]))))
-        matched = {row["id"] for row in self.relations.values()
-                   if any(f" {alias} " in f" {normalized} " for alias in row["aliases"])} if graph_enabled else set()
+        stop = set("la gi cua co va de cho toi nao the khong o trong nhung cac mot khi do nhu sao lam".split())
+        q = self.vector(Counter(t for t in words(" ".join([question, *additions])) if t not in stop))
+        matched = {row["id"]: max((len(alias.split()) for alias in row["aliases"]
+                                   if f" {alias} " in f" {normalized} "), default=0)
+                   for row in self.relations.values()} if graph_enabled else {}
+        matched = {id_: n for id_, n in matched.items() if n}
         linked_heads = {self.relations[id_]["head"] for id_ in matched}
         hits = []
         for d,v in zip(self.docs,self.vectors):
@@ -110,7 +122,7 @@ class KnowledgeAgent:
             score = sum(w*v.get(t,0) for t,w in q.items())
             edge = self.relations.get(d["id"])
             if d["id"] in matched:
-                score += .18
+                score += .20 + .045 * min(4, matched[d["id"]])
             elif edge and edge["head"] in linked_heads and score >= .12:
                 score += .035
             if score >= .12:
@@ -123,7 +135,7 @@ class KnowledgeAgent:
 
     def respond(self, question, topic=None, *, allow_external=False):
         hits = self.retrieve(question, topic)
-        if not hits:
+        if not hits or hits[0]["score"] < .26:
             return "Kho tri thức chưa tìm thấy đoạn đủ phù hợp.", [], "Thiếu bằng chứng"
         claims, mode = answer_from_evidence(question, hits, allow_external=allow_external)
         cited = {cid for claim in claims for cid in claim["evidence_ids"]}
@@ -228,7 +240,7 @@ class Coordinator:
         if any(p in query for p in ("kho tho","bat tinh","hon me","non lien tuc","ketone cao","tho mui trai cay")):
             text, hits = self.emergency()
             return text, hits, "Luật an toàn"
-        if any(p in query for p in ("lieu insulin","tang lieu","giam lieu","ngung thuoc")):
+        if any(p in query for p in ("lieu insulin","tang lieu","giam lieu","ngung thuoc","uong bao nhieu","may vien","lieu dung","bao nhieu mg","tu y dung")):
             return "Hãy trao đổi với nhân viên y tế phụ trách điều trị về liều hoặc thay đổi thuốc.", [], "Luật an toàn"
         faq = {" ".join(words(prompt)): id_ for prompt,id_ in FAQ.items()}
         source_id = faq.get(query)
@@ -236,14 +248,14 @@ class Coordinator:
             for item in self.kb.docs:
                 if item["id"] == source_id:
                     return f'{item["text"]} [{source_id}]', [item], "FAQ"
-        follow_up = any(phrase in query for phrase in ("xet nghiem do", "chi so do", "cach do", "noi them"))
+        follow_up = any(phrase in query for phrase in ("xet nghiem do", "chi so do", "cach do", "noi them", "thuoc do", "benh do"))
         named_concept = any(f" {alias} " in f" {query} "
                             for edge in self.kb.relations.values() for alias in edge["aliases"])
         if follow_up and not named_concept:
             previous = self.kb.relations.get(context)
             if not previous:
                 return "Bạn muốn hỏi thêm về xét nghiệm hoặc chủ đề nào?", [], "Cần làm rõ"
-            question = f'{previous["tail"]}. {question}'
+            question = f'{previous["aliases"][0]}. {question}'
         return self.kb.respond(question, allow_external=allow_external)
 
     def compare(self, profile, field, new_value):
@@ -262,7 +274,7 @@ class Coordinator:
         if rule=="R0":
             result["answer"],result["evidence"] = self.emergency()
         elif rule=="R1":
-            result["answer"] = "Hồ sơ ngoài phạm vi trình diễn Pima. Có thể dùng mục hỏi đáp tri thức."
+            result["answer"] = "Hồ sơ ngoài phạm vi trình diễn của mô hình. Có thể dùng mục hỏi đáp tri thức."
         elif rule=="R2":
             result["answer"] = "Cần glucose 2 giờ OGTT, BMI và tuổi để chạy mô hình minh họa."
         else:

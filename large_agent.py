@@ -41,9 +41,10 @@ class LargeCoordinator(Coordinator):
 
     def ask_detail(self, question, *, allow_external=False, context=""):
         answer, hits, mode = super().ask_detail(question, allow_external=allow_external, context=context)
-        if mode != "Trích đoạn có kiểm chứng":
+        if mode != "Trích đoạn có kiểm chứng" or not hits:
             return answer, hits, mode
         primary = hits[0]
-        related = [doc for doc in hits[1:] if doc["score"] >= primary["score"] * .75]
+        related = [doc for doc in hits[1:] if doc["topic"] == primary["topic"]
+                   and doc["url"] != primary["url"] and doc["score"] >= primary["score"] * .83][:1]
         selected = [primary, *related]
         return "\n\n".join(f'{doc["text"]} [{doc["id"]}]' for doc in selected), selected, mode

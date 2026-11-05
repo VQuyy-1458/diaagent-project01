@@ -162,17 +162,20 @@ def knowledge(values=None):
         message, hits, mode = engine.ask_detail(question, allow_external=values.get("external") == "on",
                                                 context=context)
         context = hits[0]["id"] if hits and mode != "Luật an toàn" else ""
-        answer = (f'<article id="current-answer" data-context="{context}"><h2>Phản hồi có nguồn</h2>'
+        answer = (f'<article id="current-answer" data-context="{context}"><h2>{"Phản hồi có nguồn" if hits else "Phản hồi"}</h2>'
                   f'<p><small>{escape(mode)}</small></p><p class="answer-text" style="white-space:pre-line">{escape(message)}</p>'
                   f'<ul>{evidence(hits)}</ul></article>')
     consent = ""
     if os.getenv("GEMINI_API_KEY"):
         consent = ('<label class="check"><input type="checkbox" name="external"> '
                    'Dùng Gemini để diễn giải. Chỉ nhập câu hỏi kiến thức chung.</label>')
-    return page("Hỏi đáp tri thức", "Hỏi bằng tiếng Việt và xem đường dẫn từ khái niệm đến bằng chứng.",
+    return page("Hỏi đáp tri thức", "Hỏi bằng tiếng Việt. Tra cứu kiến thức từ Nhà thuốc FPT Long Châu và xem nguồn cho từng câu trả lời.",
                 f'<div class="panel"><form id="knowledge-form" action="/tri-thuc" method="post">'
-                f'<label>Câu hỏi<input name="question" maxlength="300" required value="{escape(question)}" '
+                f'<label>Câu hỏi<input name="question" maxlength="300" list="sample-questions" required value="{escape(question)}" '
                 f'placeholder="Ví dụ: Xét nghiệm HbA1c phản ánh bao lâu?"></label>'
+                '<datalist id="sample-questions"><option value="Tiền đái tháo đường là gì?"></option>'
+                '<option value="Xét nghiệm HbA1c phản ánh bao lâu?"></option><option value="Hạ đường huyết có biểu hiện gì?"></option>'
+                '<option value="Người đái tháo đường nên chọn thực phẩm nào?"></option><option value="Metformin là thuốc gì?"></option></datalist>'
                 f'{consent}<button type="submit">Tra cứu</button></form><p id="chat-status" role="status"></p>'
                 f'<div id="answer-slot">{answer}</div></div>'
                 '<details class="panel"><summary>Lịch sử hỏi đáp trên trình duyệt</summary>'

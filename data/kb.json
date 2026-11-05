@@ -11,82 +11,181 @@
   {
     "id": "K02",
     "topic": "Xét nghiệm",
-    "title": "Xét nghiệm A1C",
-    "keys": "a1c hba1c trung bình ba tháng",
-    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
-    "text": "A1C phản ánh mức đường huyết trung bình trong khoảng ba tháng gần đây. Nhân viên y tế có thể giải thích kết quả và chỉ định bước tiếp theo.",
-    "source": "CDC"
+    "title": "HbA1c phản ánh đường huyết trong bao lâu?",
+    "text": "HbA1c phản ánh mức đường huyết trung bình trong khoảng hai đến ba tháng gần đây. Xét nghiệm hỗ trợ phát hiện và theo dõi đái tháo đường.",
+    "keys": "HbA1c a1c hemoglobin glycat",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/chi-so-hb-a1c-binh-thuong-la-bao-nhieu-khi-nao-nen-lam-xet-nghiem-hb-a1-c.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K03",
     "topic": "Xét nghiệm",
-    "title": "Nghiệm pháp dung nạp glucose",
-    "keys": "ogtt hai giờ glucose dung nạp",
-    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
-    "text": "OGTT đo đáp ứng đường huyết sau khi uống dung dịch glucose. Kết quả hai giờ thuộc một quy trình xét nghiệm có chuẩn bị cụ thể.",
-    "source": "CDC"
+    "title": "Nghiệm pháp dung nạp glucose đường uống",
+    "text": "OGTT đo đường huyết theo quy trình chuẩn sau khi uống dung dịch glucose. Một lần đo tại nhà sau bữa ăn thông thường không thay thế được xét nghiệm này.",
+    "keys": "ogtt nghiệm pháp dung nạp đường dung nạp glucose đường huyết hai giờ",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/chi-so-duong-huyet-tien-tieu-duong-la-bao-nhieu.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K04",
     "topic": "Xét nghiệm",
-    "title": "Glucose lúc đói",
-    "keys": "xét nghiệm nhịn ăn đường huyết lúc đói",
-    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
-    "text": "Xét nghiệm glucose lúc đói đo đường huyết sau thời gian nhịn ăn theo hướng dẫn của cơ sở xét nghiệm.",
-    "source": "CDC"
+    "title": "Đo glucose lúc đói",
+    "text": "Đo glucose lúc đói là xét nghiệm máu sau thời gian nhịn ăn theo hướng dẫn của cơ sở y tế. Thời điểm đo cần được xác định trước khi đối chiếu kết quả với ngưỡng lúc đói.",
+    "keys": "đường huyết lúc đói glucose lúc đói nhịn ăn",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/huong-dan-cach-doc-chi-so-duong-huyet-chinh-xac-va-don-gian-nhat.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K05",
     "topic": "Theo dõi",
-    "title": "Nhận biết triệu chứng",
-    "keys": "khát nước tiểu nhiều mờ mắt triệu chứng theo dõi",
-    "url": "https://www.cdc.gov/diabetes/signs-symptoms/",
-    "text": "Khát nhiều, tiểu nhiều và nhìn mờ là các triệu chứng có thể gặp. Một số người có ít triệu chứng trong giai đoạn đầu.",
-    "source": "CDC"
+    "title": "Dấu hiệu thường gặp của đái tháo đường",
+    "text": "Khát nhiều, tiểu nhiều và nhìn mờ là những dấu hiệu có thể gặp. Một số người có biểu hiện không rõ; cần xét nghiệm để xác định nguyên nhân.",
+    "keys": "triệu chứng tiểu nhiều khát nhiều nhìn mờ",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/nhan-biet-ve-trieu-chung-benh-tieu-duong-giai-doan-dau.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K06",
     "topic": "Vận động",
-    "title": "Hoạt động thể lực",
-    "keys": "vận động hoạt động thể lực đi bộ phòng ngừa",
-    "url": "https://www.ncbi.nlm.nih.gov/books/NBK619261/",
-    "text": "Các nghiên cứu dự phòng đái tháo đường típ 2 ghi nhận lợi ích của chương trình thay đổi lối sống có thành phần vận động.",
-    "source": "Diabetes in America, NIDDK"
+    "title": "Vận động và phòng ngừa típ 2",
+    "text": "Tập thể dục đều đặn là một phần của lối sống giúp giảm nguy cơ đái tháo đường típ 2. Chọn hoạt động phù hợp với khả năng và tình trạng sức khỏe.",
+    "keys": "vận động đi bộ hoạt động thể lực tập thể dục",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/huong-dan-cach-phong-ngua-benh-tieu-duong.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K07",
     "topic": "Dinh dưỡng",
-    "title": "Mô hình đĩa ăn",
-    "keys": "đĩa ăn rau tinh bột protein dinh dưỡng",
-    "url": "https://www.cdc.gov/diabetes/healthy-eating/diabetes-meal-planning.html",
-    "text": "Phương pháp đĩa ăn minh họa cách phân bố rau không tinh bột, thực phẩm giàu đạm và thực phẩm chứa carbohydrate trong một bữa ăn.",
-    "source": "CDC"
+    "title": "Chọn thực phẩm khi mắc đái tháo đường",
+    "text": "Có thể ưu tiên rau, thực phẩm giàu chất xơ, cá hoặc thịt nạc; điều chỉnh lượng tinh bột thay vì bỏ hẳn nhóm này. Khẩu phần cụ thể còn phụ thuộc sức khỏe và nhu cầu mỗi người.",
+    "keys": "chế độ ăn ăn gì tinh bột thực đơn dinh dưỡng ăn uống lành mạnh",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/cach-xay-dung-che-do-an-cho-nguoi-tieu-duong.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K08",
     "topic": "Dinh dưỡng",
-    "title": "Đồ uống trong bữa ăn",
-    "keys": "đồ uống nước ngọt nước lọc dinh dưỡng",
-    "url": "https://www.cdc.gov/diabetes/healthy-eating/diabetes-meal-planning.html",
-    "text": "Nước lọc hoặc đồ uống không đường là lựa chọn có thể dùng cùng phương pháp đĩa ăn.",
-    "source": "CDC"
+    "title": "Hạn chế đồ uống có đường",
+    "text": "Hạn chế đồ uống nhiều đường là một cách giảm lượng đường thêm vào trong chế độ ăn. Có thể chọn nước lọc hoặc đồ uống không đường.",
+    "keys": "đồ uống nước lọc nước ngọt trà sữa",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/huong-dan-cach-phong-ngua-benh-tieu-duong.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K09",
     "topic": "Theo dõi",
-    "title": "Trao đổi về xét nghiệm",
-    "keys": "theo dõi đường huyết kiểm tra",
-    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
-    "text": "Trao đổi với nhân viên y tế về xét nghiệm phù hợp với tình trạng và kế hoạch chăm sóc.",
-    "source": "CDC"
+    "title": "Ghi rõ thời điểm đo glucose",
+    "text": "Khi ghi kết quả đường huyết, hãy ghi thêm thời điểm đo và có nhịn ăn hay không. Chỉ số lúc đói và sau ăn có cách diễn giải khác nhau.",
+    "keys": "theo dõi đường huyết thời điểm đo sau ăn ghi lại",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/huong-dan-cach-doc-chi-so-duong-huyet-chinh-xac-va-don-gian-nhat.html",
+    "source": "Nhà thuốc FPT Long Châu"
   },
   {
     "id": "K10",
     "topic": "Vận động",
-    "title": "Chương trình thay đổi lối sống",
-    "keys": "chương trình vận động duy trì phòng ngừa lối sống",
-    "url": "https://www.ncbi.nlm.nih.gov/books/NBK619261/",
-    "text": "Can thiệp dự phòng thường kết hợp hoạt động thể lực, điều chỉnh ăn uống và hỗ trợ duy trì hành vi.",
-    "source": "Diabetes in America, NIDDK"
+    "title": "Vai trò của vận động trong quản lý típ 2",
+    "text": "Hoạt động thể lực phù hợp giúp hỗ trợ kiểm soát đường huyết ở người mắc típ 2. Nếu có biến chứng hoặc đang dùng thuốc ảnh hưởng đường huyết, hãy hỏi nhân viên y tế về cách tập phù hợp.",
+    "keys": "tập thể dục khi bị tiểu đường luyện tập",
+    "url": "https://nhathuoclongchau.com.vn/benh/tieu-duong-tuyp-2.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K11",
+    "topic": "Xét nghiệm",
+    "title": "Tiền đái tháo đường là gì?",
+    "text": "Tiền đái tháo đường là tình trạng đường huyết cao hơn bình thường nhưng chưa đến ngưỡng đái tháo đường. Nhân viên y tế có thể dùng HbA1c, glucose lúc đói hoặc OGTT để đánh giá.",
+    "keys": "tiền tiểu đường tiền đái tháo đường tiền đái",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/chi-so-duong-huyet-tien-tieu-duong-la-bao-nhieu.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K12",
+    "topic": "Theo dõi",
+    "title": "Nhận biết hạ đường huyết",
+    "text": "Hạ đường huyết là tình trạng glucose trong máu giảm thấp. Các dấu hiệu có thể gồm vã mồ hôi, hồi hộp hoặc chóng mặt. Nếu người bệnh bất tỉnh, cần gọi cấp cứu.",
+    "keys": "hạ đường huyết tụt đường vã mồ hôi hồi hộp",
+    "url": "https://nhathuoclongchau.com.vn/benh/ha-duong-huyet-294.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K13",
+    "topic": "Theo dõi",
+    "title": "Biến chứng đái tháo đường",
+    "text": "Đái tháo đường có thể ảnh hưởng đến mắt, thận, thần kinh và tim mạch. Theo dõi định kỳ giúp phát hiện vấn đề sớm.",
+    "keys": "biến chứng tổn thương thận võng mạc tổn thương thần kinh",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/6-bien-chung-benh-tieu-duong-thuong-gap-va-cach-phong-ngua.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K14",
+    "topic": "Theo dõi",
+    "title": "Hút thuốc và đái tháo đường",
+    "text": "Hút thuốc có liên quan đến nguy cơ đái tháo đường típ 2 và có thể làm việc kiểm soát bệnh khó hơn. Có thể hỏi cơ sở y tế về hỗ trợ cai thuốc.",
+    "keys": "hút thuốc thuốc lá cai thuốc",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/benh-tieu-duong-co-lien-quan-den-hut-thuoc-la-khong-50643.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K15",
+    "topic": "Theo dõi",
+    "title": "Béo phì và kháng insulin",
+    "text": "Thừa cân hoặc béo phì có liên quan đến kháng insulin và nguy cơ đái tháo đường típ 2. BMI chỉ là một thông tin để đánh giá cùng các yếu tố khác.",
+    "keys": "béo phì bmi kháng insulin thừa cân",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/khang-insulin-va-beo-phi-co-moi-lien-he-gi-doi-tuong-nao-de-mac-tieu-duong-do-beo-phi.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K16",
+    "topic": "Theo dõi",
+    "title": "Tìm hiểu đái tháo đường típ 1",
+    "text": "Trong đái tháo đường típ 1, cơ thể sản xuất rất ít hoặc không sản xuất đủ insulin. Người bệnh cần được bác sĩ theo dõi và điều trị bằng insulin theo chỉ định.",
+    "keys": "típ 1 tuýp 1 type 1",
+    "url": "https://nhathuoclongchau.com.vn/benh/tieu-duong-tuyp-1.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K17",
+    "topic": "Theo dõi",
+    "title": "Tìm hiểu đái tháo đường típ 2",
+    "text": "Trong đái tháo đường típ 2, cơ thể đáp ứng kém với insulin hoặc không sản xuất đủ insulin để giữ đường huyết trong mức phù hợp.",
+    "keys": "típ 2 tuýp 2 type 2",
+    "url": "https://nhathuoclongchau.com.vn/benh/tieu-duong-tuyp-2.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K18",
+    "topic": "Thuốc",
+    "title": "Thông tin chung về metformin",
+    "text": "Metformin là thuốc kê đơn được dùng trong điều trị đái tháo đường típ 2. Việc chọn thuốc và điều chỉnh điều trị cần do nhân viên y tế quyết định.",
+    "keys": "metformin thuốc metformin",
+    "url": "https://nhathuoclongchau.com.vn/thuoc/metformin-1000mg-stella-6x10-30260.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K19",
+    "topic": "Thuốc",
+    "title": "Thông tin chung về gliclazide",
+    "text": "Gliclazide là thuốc kê đơn dùng trong điều trị đái tháo đường típ 2. Thuốc có thể gây hạ đường huyết; không tự thay đổi cách dùng.",
+    "keys": "gliclazide dorocron",
+    "url": "https://nhathuoclongchau.com.vn/thuoc/dorocron-mr-30mg-domesco-2x30-20167.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K20",
+    "topic": "Thuốc",
+    "title": "Thông tin chung về dapagliflozin",
+    "text": "Dapagliflozin là thuốc kê đơn thuộc nhóm ức chế SGLT2. Chỉ định tùy bệnh lý và đánh giá của bác sĩ.",
+    "keys": "dapagliflozin forxiga sglt2",
+    "url": "https://nhathuoclongchau.com.vn/thuoc/forxiga-10mg-3713.html",
+    "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K21",
+    "topic": "Theo dõi",
+    "title": "Các yếu tố nguy cơ thường gặp",
+    "text": "Tuổi, tiền sử gia đình, ít vận động và thừa cân là các thông tin có thể liên quan đến nguy cơ đái tháo đường típ 2. Một yếu tố riêng lẻ không đủ để kết luận.",
+    "keys": "yếu tố nguy cơ tiền sử gia đình di truyền",
+    "url": "https://nhathuoclongchau.com.vn/bai-viet/dai-thao-duong-la-gi-nhung-yeu-to-nguy-co-dai-thao-duong-ma-ban-nen-biet.html",
+    "source": "Nhà thuốc FPT Long Châu"
   }
 ]
