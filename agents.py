@@ -33,10 +33,10 @@ def words(text):
     return re.findall(r"[a-z0-9]+", "".join(c for c in text if not unicodedata.combining(c)))
 
 
-def graph():
+def graph(*, use_neo4j=True):
     docs = read("data/kb.json")
     relations = read("data/relations.json")
-    if not os.getenv("NEO4J_URI"):
+    if not use_neo4j or not os.getenv("NEO4J_URI"):
         return docs, relations, "Đồ thị JSON"
     from neo4j import GraphDatabase
     with GraphDatabase.driver(os.environ["NEO4J_URI"],
@@ -209,8 +209,8 @@ class PlannerAgent:
 
 
 class Coordinator:
-    def __init__(self):
-        docs,relations,self.backend = graph()
+    def __init__(self, *, use_neo4j=True):
+        docs,relations,self.backend = graph(use_neo4j=use_neo4j)
         self.kb = KnowledgeAgent(docs, relations)
         self.pred = PredictionAgent(read("results/model.json"))
         self.plan = PlannerAgent(read("results/q.json"))

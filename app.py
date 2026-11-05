@@ -14,7 +14,8 @@ if __name__ == "__main__" and os.getenv("RENDER") == "true" and not os.getenv("N
     install_signal_handler()
     raise SystemExit(serve())
 
-engine = None if os.getenv("DIAAGENT_STARTING_DB") == "1" else Coordinator()
+warming_neo4j = os.getenv("DIAAGENT_STARTING_DB") == "1"
+engine = Coordinator(use_neo4j=not warming_neo4j)
 
 
 def initialize_engine():
@@ -38,7 +39,7 @@ def initialize_engine():
     except Exception:
         import traceback
         traceback.print_exc()
-        os._exit(1)
+        print("Neo4j initialization failed; serving the local graph snapshot", flush=True)
 
 stats = read("results/summary.json")
 ROOT = Path(__file__).resolve().parent
@@ -216,7 +217,11 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length",str(len(payload)))
         self.send_header("Cache-Control","no-store")
         self.end_headers()
-        self.wfile.write(payload)
+        if self.command != "HEAD":
+            self.wfile.write(payload)
+
+    def do_HEAD(self):
+        self.do_GET()
 
     def do_GET(self):
         request = urlsplit(self.path)
@@ -224,11 +229,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/interface.js":
             return self.respond(INTERFACE, "text/javascript; charset=utf-8")
         if path=="/health":
-            if engine is None:
-                return self.respond('{"status":"starting"}', "application/json", 503)
             return self.respond(json.dumps({"status": "ok", "knowledge_backend": engine.backend}), "application/json")
-        if engine is None:
-            return self.respond("Kho tri thức đang khởi động. Vui lòng tải lại trang sau.", "text/plain; charset=utf-8", 503)
         if path == "/tra-cuu":
             try:
                 params = parse_qs(request.query, max_num_fields=8)
@@ -241,8 +242,6 @@ class Handler(BaseHTTPRequestHandler):
         self.respond(pages[path]())
 
     def do_POST(self):
-        if engine is None:
-            return self.respond("Kho tri thức đang khởi động. Vui lòng thử lại sau.", "text/plain; charset=utf-8", 503)
         path = urlsplit(self.path).path
         try:
             size = int(self.headers.get("Content-Length",0))
@@ -262,7 +261,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__=="__main__":
-    if engine is None:
+    if warming_neo4j:
         threading.Thread(target=initialize_engine, daemon=True).start()
     ThreadingHTTPServer(("0.0.0.0",int(os.getenv("PORT","8000"))),Handler).serve_forever()
 

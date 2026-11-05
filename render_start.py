@@ -52,7 +52,12 @@ def serve():
                                   start_new_session=True)
             while db.poll() is None and web.poll() is None:
                 time.sleep(.5)
-            return web.poll() or db.poll() or 1
+            if web.poll() is None:
+                print("Neo4j process exited; web remains available with its loaded knowledge graph", flush=True)
+            return web.wait()
+        except (OSError, subprocess.CalledProcessError) as exc:
+            print(f"Neo4j setup failed ({type(exc).__name__}); web remains available", flush=True)
+            return web.wait()
         finally:
             if web is not None and web.poll() is None:
                 web.terminate()
