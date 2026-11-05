@@ -9,3 +9,20 @@
 .prediction-pair {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0}
 .prediction-pair strong {display:block;color:#154f41;font-size:clamp(1.35rem,3vw,1.8rem)}
 @media (max-width:700px) {.architecture-steps {grid-template-columns:1fr}}
+nav {align-items:center;flex-wrap:wrap}
+#theme {padding:.35rem .6rem;font-size:.8rem}
+.graph-path,.comparison {padding:.55rem .75rem;border-left:3px solid #438474;background:#eef7f4}
+.what-if {margin:1rem 0}
+summary {cursor:pointer;font-weight:650}
+select {display:block;width:100%;padding:.55rem;margin:.25rem 0 .6rem}
+#conversation article {border-top:1px solid #a9c7c3;margin-top:1rem;padding-top:.5rem}
+:root[data-theme=dark] {color-scheme:dark}
+[data-theme=dark] body {background:#142825;color:#e0eee8}
+[data-theme=dark] .panel,[data-theme=dark] .hero {background:#213a36;color:#eef7f4;border-color:#47746b}
+[data-theme=dark] .eyebrow,[data-theme=dark] .tag,[data-theme=dark] .score {color:#a4e8d6}
+[data-theme=dark] .architecture-steps li,[data-theme=dark] .prediction-pair > div,
+[data-theme=dark] .flow span,[data-theme=dark] .graph-path,[data-theme=dark] .comparison {background:#2b4a44;color:#f2fcf8}
+[data-theme=dark] .prediction-pair strong,[data-theme=dark] a {color:#b3f1e3}
+[data-theme=dark] .notice {background:#403720;color:#fff0c9}
+[data-theme=dark] input,[data-theme=dark] select {background:#152e28;color:#f2fcf8;border-color:#73958a}
+[data-theme=dark] footer {color:#c7ded6}

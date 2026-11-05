@@ -1,0 +1,116 @@
+[
+  {
+    "id": "K01",
+    "head": "Nhiễm toan ceton",
+    "relation": "Dấu hiệu cảnh báo",
+    "tail": "Khó thở hoặc nôn liên tục",
+    "aliases": [
+      "nhiem toan ceton",
+      "hoi tho mui trai cay",
+      "nhiem toan",
+      "dka"
+    ]
+  },
+  {
+    "id": "K02",
+    "head": "Đánh giá đường huyết",
+    "relation": "Xét nghiệm",
+    "tail": "HbA1c",
+    "aliases": [
+      "hba1c",
+      "a1c",
+      "hemoglobin glycat"
+    ]
+  },
+  {
+    "id": "K03",
+    "head": "Đánh giá đường huyết",
+    "relation": "Xét nghiệm",
+    "tail": "OGTT",
+    "aliases": [
+      "ogtt",
+      "nghiem phap dung nap duong",
+      "dung nap glucose",
+      "duong huyet hai gio"
+    ]
+  },
+  {
+    "id": "K04",
+    "head": "Đánh giá đường huyết",
+    "relation": "Xét nghiệm",
+    "tail": "Glucose lúc đói",
+    "aliases": [
+      "glucose luc doi",
+      "duong huyet luc doi",
+      "nhin an"
+    ]
+  },
+  {
+    "id": "K05",
+    "head": "Đái tháo đường",
+    "relation": "Triệu chứng",
+    "tail": "Khát nhiều, tiểu nhiều, nhìn mờ",
+    "aliases": [
+      "trieu chung",
+      "tieu nhieu",
+      "khat nhieu",
+      "nhin mo"
+    ]
+  },
+  {
+    "id": "K06",
+    "head": "Phòng ngừa típ 2",
+    "relation": "Hoạt động",
+    "tail": "Vận động thể lực",
+    "aliases": [
+      "van dong",
+      "di bo",
+      "hoat dong the luc"
+    ]
+  },
+  {
+    "id": "K07",
+    "head": "Dinh dưỡng",
+    "relation": "Phương pháp",
+    "tail": "Mô hình đĩa ăn",
+    "aliases": [
+      "dia an",
+      "chia dia",
+      "tinh bot",
+      "an uong lanh manh"
+    ]
+  },
+  {
+    "id": "K08",
+    "head": "Dinh dưỡng",
+    "relation": "Lựa chọn",
+    "tail": "Đồ uống không đường",
+    "aliases": [
+      "do uong",
+      "nuoc loc",
+      "nuoc ngot",
+      "nuoc khong duong"
+    ]
+  },
+  {
+    "id": "K09",
+    "head": "Đái tháo đường",
+    "relation": "Theo dõi",
+    "tail": "Trao đổi về xét nghiệm",
+    "aliases": [
+      "theo doi",
+      "kiem tra duong huyet"
+    ]
+  },
+  {
+    "id": "K10",
+    "head": "Phòng ngừa típ 2",
+    "relation": "Can thiệp",
+    "tail": "Thay đổi lối sống",
+    "aliases": [
+      "loi song",
+      "thay doi thoi quen",
+      "can thiep du phong"
+    ]
+  }
+]

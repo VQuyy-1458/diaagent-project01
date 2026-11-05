@@ -3,10 +3,28 @@ import json
 import logging
 import os
 import re
+import unicodedata
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 LOG = logging.getLogger(__name__)
+
+
+def verify_generated_content(claims, evidence):
+    by_id = {item["id"]: item["text"] for item in evidence}
+    numbers = re.compile(r"(?<![\w])\d+(?:[.,]\d+)?")
+    dosage = re.compile(r"\d+(?:[.,]\d+)?\s*(?:mg|mcg|µg|iu|viên|đơn vị)\b(?!\s*/)", re.I)
+    for claim in claims:
+        text = claim["text"]
+        plain = unicodedata.normalize("NFKD", text.casefold().replace("đ", "d"))
+        plain = "".join(char for char in plain if not unicodedata.combining(char))
+        if dosage.search(text) or re.search(r"\bban (?:da )?(?:bi|mac) (?:benh )?(?:tieu duong|dai thao duong)\b", plain):
+            raise ValueError("Unsafe generated claim")
+        cited = " ".join(by_id[id_] for id_ in claim["evidence_ids"])
+        seen = {item.replace(",", ".") for item in numbers.findall(cited)}
+        if any(item.replace(",", ".") not in seen for item in numbers.findall(text)):
+            raise ValueError("Generated number absent from cited evidence")
+    return claims
 
 
 def verify_claims(claims, evidence):
@@ -62,7 +80,7 @@ def answer_from_evidence(question, evidence, *, allow_external=False):
     if key:
         try:
             claims = verify_claims(gemini_claims(question, evidence, key), evidence)
-            return claims, "Gemini"
+            return verify_generated_content(claims, evidence), "Gemini"
         except (URLError, TimeoutError, ValueError, KeyError, IndexError, TypeError) as error:
             LOG.warning("Gemini unavailable or rejected: %s", type(error).__name__)
     claims = [{"text": d["text"], "evidence_ids": [d["id"]]} for d in evidence]

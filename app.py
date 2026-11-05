@@ -7,7 +7,7 @@ import threading
 import time
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from agents import Coordinator, FIELDS, read
+from agents import Coordinator, FAQ, FIELDS, read
 
 if __name__ == "__main__" and os.getenv("RENDER") == "true" and not os.getenv("NEO4J_URI"):
     from render_start import install_signal_handler, serve
@@ -43,6 +43,7 @@ def initialize_engine():
 stats = read("results/summary.json")
 ROOT = Path(__file__).resolve().parent
 CSS = (ROOT/"style.css").read_text(encoding="utf-8")
+INTERFACE = (ROOT/"interface.js").read_text(encoding="utf-8")
 DEMO = dict(zip(FIELDS, ["2","138","72","29","","33.2","0.40","45"]))
 LABELS = ["Số lần mang thai","Glucose 2 giờ OGTT · mg/dL","Huyết áp tâm trương · mmHg",
           "Nếp gấp da · mm","Insulin 2 giờ · µU/mL","BMI · kg/m²","Chỉ số phả hệ Pima","Tuổi · năm"]
@@ -51,9 +52,9 @@ LABELS = ["Số lần mang thai","Glucose 2 giờ OGTT · mg/dL","Huyết áp t�
 def page(title, description, content):
     return f"""<!doctype html><html lang="vi"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} | DiaAgent</title><style>{CSS}</style><body>
+<title>{title} | DiaAgent</title><style>{CSS}</style><script src="/interface.js" defer></script><body>
 <header><a class="brand" href="/">DiaAgent <small>PROJECT 01</small></a>
-<nav><a href="/">Phân tích</a><a href="/tri-thuc">Tri thức</a><a href="/thuc-nghiem">Thực nghiệm</a></nav></header>
+<nav><a href="/">Phân tích</a><a href="/tri-thuc">Hỏi đáp</a><a href="/faq">FAQ</a><a href="/tra-cuu">Tra cứu</a><a href="/thuc-nghiem">Thực nghiệm</a><button type="button" id="theme" aria-pressed="false">Sáng / tối</button></nav></header>
 <main><div class="hero"><div class="eyebrow">PHÁT TRIỂN CÁC HỆ THỐNG THÔNG MINH</div>
 <h1>{title}</h1><p>{description}</p></div>
 <div class="notice">Bản demo học thuật dùng hồ sơ giả định. Kết quả mô hình chỉ phục vụ minh họa và không thay thế đánh giá y tế.</div>
@@ -61,8 +62,14 @@ def page(title, description, content):
 
 
 def evidence(hits):
-    return "".join(f'<li><a href="{escape(h["url"])}" rel="noreferrer">{h["id"]} · {escape(h["title"])}</a>'
-                   f'<br><small>{escape(h["source"])}</small></li>' for h in hits)
+    items = []
+    for hit in hits:
+        path = hit.get("path")
+        graph = f'<p class="graph-path">{escape(" → ".join(path))}</p>' if path else ""
+        items.append(f'<li><a href="{escape(hit["url"])}" rel="noreferrer">'
+                     f'{hit["id"]} · {escape(hit["title"])}</a><br><small>{escape(hit["source"])}</small>'
+                     f'<details><summary>Xem bằng chứng</summary>{graph}<p>{escape(hit["text"])}</p></details></li>')
+    return "".join(items)
 
 
 def architecture_overview():
@@ -79,7 +86,7 @@ def architecture_overview():
 
 def analysis(values=None):
     fields = values if values is not None else dict(DEMO,scope=True)
-    inputs = "".join(f'<label>{label}<input type="number" step="any" name="{k}" value="{escape(str(fields.get(k,"")))}"></label>'
+    inputs = "".join(f'<label>{label}<input type="text" inputmode="decimal" name="{k}" value="{escape(str(fields.get(k,"")))}"></label>'
                      for k,label in zip(FIELDS,LABELS))
     checks = "".join(f'<label class="check"><input type="checkbox" name="{k}" {"checked" if fields.get(k) else ""}> {label}</label>'
                      for k,label in [("scope","Hồ sơ giả định phù hợp phạm vi Pima"),
@@ -94,36 +101,96 @@ def analysis(values=None):
                      f'<div><span>Dự đoán MLP</span><strong>{p["score"]:.1%}</strong><small>Điểm đã hiệu chỉnh</small></div>'
                      f'<div><span>Phân loại</span><strong>Lớp {p["label"]}</strong><small>Ngưỡng {p["threshold"]:.2f}</small></div>'
                      f'</div>' if p else "")
+            comparison = ""
+            if p and fields.get("compare_value"):
+                try:
+                    before, after = engine.compare(fields, fields.get("compare_field"), fields["compare_value"])
+                    delta = (after["score"] - before["score"]) * 100
+                    comparison = (f'<aside class="comparison"><h3>So sánh giả định</h3><p>{before["score"]:.1%}'
+                                  f' → {after["score"]:.1%} ({delta:+.1f} điểm phần trăm), lớp '
+                                  f'{before["label"]} → {after["label"]}. Các trường khác giữ nguyên.</p>'
+                                  f'<small>Phản ứng của mô hình với đầu vào giả định.</small></aside>')
+                except ValueError as exc:
+                    comparison = f'<p class="notice">{escape(str(exc))}</p>'
+            explanation = ""
+            if "effects" in result:
+                rows = "".join(f"<li>{escape(field)}: {effect * 100:+.1f} điểm phần trăm</li>"
+                               for field, effect in result["effects"][:5])
+                explanation = (f'<details open><summary>Giải thích Shapley</summary>'
+                               f'<p>Mốc trung vị train: {result["reference_score"]:.1%}. '
+                               f'Tối đa năm đóng góp lớn nhất theo trị tuyệt đối.</p>'
+                               f'<ul>{rows}</ul><small>Đóng góp vào điểm mô hình so với mốc tham chiếu.</small></details>')
             imputed = ", ".join(result.get("imputed", []))
             panel = (f'<div class="panel {"alert" if result["rule"]=="R0" else ""}"><span class="tag">LUẬT {result["rule"]}</span>'
-                     f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{score}<p>{escape(result["answer"])}</p>'
+                     f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{score}{comparison}{explanation}<p>{escape(result["answer"])}</p>'
                      + (f'<p><small>Biến điền trung vị: {escape(imputed)}</small></p>' if imputed else "")
                      + f'<ul>{evidence(result["evidence"])}</ul><hr><h3>Vết điều phối</h3>'
                      + '<div class="flow">' + "".join(f'<span>{a}</span>' for a in result["trace"]) + '</div></div>')
         except ValueError as error:
             panel = f'<div class="panel alert"><h2>Kiểm tra dữ liệu</h2><p>{escape(str(error))}</p></div>'
+    explain = ('<label class="check"><input type="checkbox" name="explain" '
+               f'{"checked" if fields.get("explain") else ""}> Giải thích đóng góp của các biến</label>')
+    selected = " selected" if fields.get("compare_field") == "BMI" else ""
+    value = escape(fields.get("compare_value", ""))
+    what_if = ('<details class="what-if"><summary>Thử một giá trị giả định</summary>'
+               '<label>Trường so sánh<select name="compare_field"><option value="Glucose">Glucose 2 giờ OGTT</option>'
+               f'<option value="BMI"{selected}>BMI</option></select></label>'
+               f'<label>Giá trị giả định<input name="compare_value" inputmode="decimal" value="{value}"></label></details>')
     return page("Hệ đa tác tử hỗ trợ đái tháo đường","Mô hình học sâu, luật an toàn và tri thức có nguồn trong một luồng phân tích.",
                 f'{architecture_overview()}<div class="columns"><form class="panel" method="post"><span class="tag">HỒ SƠ GIẢ ĐỊNH</span><h2>Dữ liệu đầu vào</h2>'
-                f'<div class="fields">{inputs}</div>{checks}<button>Chạy phân tích</button></form>{panel}</div>')
+                f'<div class="fields">{inputs}</div>{checks}{explain}{what_if}<button>Chạy phân tích</button></form>{panel}</div>')
 
 
 def knowledge(values=None):
-    question = values.get("question","") if values else ""
+    question = values.get("question", "") if values else ""
     answer = ""
-    if question:
-        message,hits,mode = engine.ask_detail(question, allow_external=values.get("external") == "on")
-        answer = (f'<h2>Phản hồi có nguồn</h2><p><small>{escape(mode)}</small></p>'
-                  f'<p>{escape(message)}</p><ul>{evidence(hits)}</ul>')
+    if question.strip():
+        context = values.get("context", "")
+        message, hits, mode = engine.ask_detail(question, allow_external=values.get("external") == "on",
+                                                context=context)
+        context = hits[0]["id"] if hits and mode != "Luật an toàn" else ""
+        answer = (f'<article id="current-answer" data-context="{context}"><h2>Phản hồi có nguồn</h2>'
+                  f'<p><small>{escape(mode)}</small></p><p class="answer-text">{escape(message)}</p>'
+                  f'<ul>{evidence(hits)}</ul></article>')
     consent = ""
     if os.getenv("GEMINI_API_KEY"):
         consent = ('<label class="check"><input type="checkbox" name="external"> '
                    'Dùng Gemini để diễn giải. Chỉ nhập câu hỏi kiến thức chung.</label>')
-    return page("Hỏi đáp tri thức","Tra cứu đoạn tóm lược từ CDC và sách Diabetes in America.",
-                f'<div class="panel"><form method="post"><label>Câu hỏi<input name="question" maxlength="300" '
-                f'value="{escape(question)}" placeholder="Ví dụ: Xét nghiệm HbA1c phản ánh bao lâu?"></label>'
-                f'{consent}<button>Tra cứu</button></form>{answer}</div>'
-                f'<div class="panel"><h2>Kho tri thức</h2><p>{len(engine.kb.docs)} đoạn · {engine.backend}</p>'
-                f'<ul>{evidence(engine.kb.docs)}</ul></div>')
+    return page("Hỏi đáp tri thức", "Hỏi bằng tiếng Việt và xem đường dẫn từ khái niệm đến bằng chứng.",
+                f'<div class="panel"><form id="knowledge-form" action="/tri-thuc" method="post">'
+                f'<label>Câu hỏi<input name="question" maxlength="300" required value="{escape(question)}" '
+                f'placeholder="Ví dụ: Xét nghiệm HbA1c phản ánh bao lâu?"></label>'
+                f'{consent}<button type="submit">Tra cứu</button></form><p id="chat-status" role="status"></p>'
+                f'<div id="answer-slot">{answer}</div></div>'
+                '<details class="panel"><summary>Lịch sử hỏi đáp trên trình duyệt</summary>'
+                '<p>Giữ tối đa 12 lượt trên trình duyệt này.</p><div id="conversation"></div>'
+                '<button id="export-chat" type="button">Xuất hội thoại</button> '
+                '<button id="clear-chat" type="button">Xóa hội thoại</button></details>')
+
+
+def faq_page():
+    docs = {doc["id"]: doc for doc in engine.kb.docs}
+    cards = "".join(f'<details class="panel"><summary>{escape(question)}</summary>'
+                    f'<p>{escape(docs[id_]["text"])}</p><ul>{evidence([docs[id_]])}</ul></details>'
+                    for question,id_ in FAQ.items() if id_ in docs)
+    return page("Câu hỏi thường gặp", "Mở một câu để xem đáp án đã biên soạn và nguồn.", cards)
+
+
+def search_page(query, topic):
+    topics = sorted({doc["topic"] for doc in engine.kb.docs})
+    topic = topic if topic in topics else ""
+    options = '<option value="">Tất cả chủ đề</option>' + "".join(
+        f'<option {"selected" if item == topic else ""}>{escape(item)}</option>' for item in topics)
+    hits = engine.kb.retrieve(query, topic or None) if query.strip() else [
+        dict(doc, path=[edge["head"], edge["relation"], edge["tail"]]) if
+        (edge := engine.kb.relations.get(doc["id"])) else doc
+        for doc in engine.kb.docs if not topic or doc["topic"] == topic
+    ]
+    return page("Tra cứu kho tri thức", f"{len(engine.kb.docs)} đoạn nguồn · {engine.backend}",
+                f'<div class="panel"><form action="/tra-cuu" method="get"><label>Từ khóa'
+                f'<input name="q" maxlength="300" value="{escape(query)}"></label>'
+                f'<label>Chủ đề<select name="topic">{options}</select></label><button>Tìm nguồn</button></form>'
+                f'<h2>{len(hits)} kết quả</h2><ul>{evidence(hits)}</ul></div>')
 
 
 def experiments():
@@ -152,14 +219,23 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
     def do_GET(self):
-        path = urlsplit(self.path).path
+        request = urlsplit(self.path)
+        path = request.path
+        if path == "/interface.js":
+            return self.respond(INTERFACE, "text/javascript; charset=utf-8")
         if path=="/health":
             if engine is None:
                 return self.respond('{"status":"starting"}', "application/json", 503)
             return self.respond(json.dumps({"status": "ok", "knowledge_backend": engine.backend}), "application/json")
         if engine is None:
             return self.respond("Kho tri thức đang khởi động. Vui lòng tải lại trang sau.", "text/plain; charset=utf-8", 503)
-        pages = {"/":analysis,"/tri-thuc":knowledge,"/thuc-nghiem":experiments}
+        if path == "/tra-cuu":
+            try:
+                params = parse_qs(request.query, max_num_fields=8)
+            except ValueError:
+                return self.respond("Bộ lọc không hợp lệ.", "text/plain; charset=utf-8", 400)
+            return self.respond(search_page(params.get("q", [""])[0][:300], params.get("topic", [""])[0]))
+        pages = {"/":analysis,"/tri-thuc":knowledge,"/faq":faq_page,"/thuc-nghiem":experiments}
         if path not in pages:
             return self.respond("Không tìm thấy trang.","text/plain; charset=utf-8",404)
         self.respond(pages[path]())
