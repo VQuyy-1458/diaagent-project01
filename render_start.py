@@ -49,7 +49,7 @@ def serve():
                               start_new_session=True)
         web = None
         try:
-            deadline = time.monotonic() + 60
+            deadline = time.monotonic() + 180
             with GraphDatabase.driver(uri, auth=None, connection_timeout=1) as driver:
                 while db.poll() is None and time.monotonic() < deadline:
                     try:
