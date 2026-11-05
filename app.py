@@ -65,6 +65,18 @@ def evidence(hits):
                    f'<br><small>{escape(h["source"])}</small></li>' for h in hits)
 
 
+def architecture_overview():
+    backend = escape(engine.backend)
+    return f"""<section class="panel architecture" aria-label="Kiến trúc Project 01">
+    <div class="architecture-heading"><h2>Kiến trúc Project 01</h2>
+    <span class="backend">Kho tri thức · {backend}</span></div>
+    <ol class="architecture-steps">
+      <li><b>01 · Dữ liệu và học sâu</b><span>Pima → MLP → dự đoán và phân loại</span></li>
+      <li><b>02 · Điều phối</b><span>Luật an toàn + Q-learning → chọn chủ đề</span></li>
+      <li><b>03 · Tri thức và trợ giúp</b><span>Web, sách → {backend} → truy xuất và kiểm tra trích dẫn</span></li>
+    </ol></section>"""
+
+
 def analysis(values=None):
     fields = values if values is not None else dict(DEMO,scope=True)
     inputs = "".join(f'<label>{label}<input type="number" step="any" name="{k}" value="{escape(str(fields.get(k,"")))}"></label>'
@@ -78,8 +90,10 @@ def analysis(values=None):
         try:
             result = engine.run(fields)
             p = result["prediction"]
-            score = (f'<div class="score">{p["score"]:.1%}</div><p>Lớp minh họa <b>{p["label"]}</b> · Ngưỡng {p["threshold"]:.2f}</p>'
-                     if p else "")
+            score = (f'<div class="prediction-pair">'
+                     f'<div><span>Dự đoán MLP</span><strong>{p["score"]:.1%}</strong><small>Điểm đã hiệu chỉnh</small></div>'
+                     f'<div><span>Phân loại</span><strong>Lớp {p["label"]}</strong><small>Ngưỡng {p["threshold"]:.2f}</small></div>'
+                     f'</div>' if p else "")
             imputed = ", ".join(result.get("imputed", []))
             panel = (f'<div class="panel {"alert" if result["rule"]=="R0" else ""}"><span class="tag">LUẬT {result["rule"]}</span>'
                      f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{score}<p>{escape(result["answer"])}</p>'
@@ -89,7 +103,7 @@ def analysis(values=None):
         except ValueError as error:
             panel = f'<div class="panel alert"><h2>Kiểm tra dữ liệu</h2><p>{escape(str(error))}</p></div>'
     return page("Hệ đa tác tử hỗ trợ đái tháo đường","Mô hình học sâu, luật an toàn và tri thức có nguồn trong một luồng phân tích.",
-                f'<div class="columns"><form class="panel" method="post"><span class="tag">HỒ SƠ GIẢ ĐỊNH</span><h2>Dữ liệu đầu vào</h2>'
+                f'{architecture_overview()}<div class="columns"><form class="panel" method="post"><span class="tag">HỒ SƠ GIẢ ĐỊNH</span><h2>Dữ liệu đầu vào</h2>'
                 f'<div class="fields">{inputs}</div>{checks}<button>Chạy phân tích</button></form>{panel}</div>')
 
 
