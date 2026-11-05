@@ -7,7 +7,9 @@ import threading
 import time
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
-from agents import Coordinator, FAQ, FIELDS, read
+from agents import FAQ, read
+from large_agent import LargeCoordinator as Coordinator
+from large_model import CATEGORIES, FIELDS
 
 if __name__ == "__main__" and os.getenv("RENDER") == "true" and not os.getenv("NEO4J_URI"):
     from render_start import install_signal_handler, serve
@@ -41,13 +43,24 @@ def initialize_engine():
         traceback.print_exc()
         print("Neo4j initialization failed; serving the local graph snapshot", flush=True)
 
-stats = read("results/summary.json")
+stats = read("results/large_metrics.json")
 ROOT = Path(__file__).resolve().parent
 CSS = (ROOT/"style.css").read_text(encoding="utf-8")
 INTERFACE = (ROOT/"interface.js").read_text(encoding="utf-8")
-DEMO = dict(zip(FIELDS, ["2","138","72","29","","33.2","0.40","45"]))
-LABELS = ["Số lần mang thai","Glucose 2 giờ OGTT · mg/dL","Huyết áp tâm trương · mmHg",
-          "Nếp gấp da · mm","Insulin 2 giờ · µU/mL","BMI · kg/m²","Chỉ số phả hệ Pima","Tuổi · năm"]
+DEMO = dict(zip(FIELDS, ["Female","54","0","0","No Info","27.32","6.6","140"]))
+LABELS = ["Giới tính", "Tuổi", "Tăng huyết áp (0/1)", "Bệnh tim (0/1)", "Tiền sử hút thuốc",
+          "BMI · kg/m²", "HbA1c · % (tùy chọn)", "Glucose máu · mg/dL (tùy chọn)"]
+OPTIONS = {"Female":"Nữ","Male":"Nam","No Info":"Không có thông tin","never":"Chưa từng",
+           "current":"Đang hút","former":"Đã bỏ","ever":"Từng hút","not current":"Hiện không hút"}
+
+
+def profile_input(field, label, value):
+    if field not in CATEGORIES:
+        return f'<label>{label}<input type="text" inputmode="decimal" name="{field}" value="{escape(value)}"></label>'
+    choices = "".join(f'<option value="{option}" {"selected" if option==value else ""}>{OPTIONS[option]}</option>'
+                      for option in CATEGORIES[field])
+    return f'<label>{label}<select name="{field}">{choices}</select></label>'
+
 
 
 def page(title, description, content):
@@ -79,7 +92,7 @@ def architecture_overview():
     <div class="architecture-heading"><h2>Kiến trúc Project 01</h2>
     <span class="backend">Kho tri thức · {backend}</span></div>
     <ol class="architecture-steps">
-      <li><b>01 · Dữ liệu và học sâu</b><span>Pima → MLP → dự đoán và phân loại</span></li>
+      <li><b>01 · Dữ liệu và học sâu</b><span>Kaggle → MLP → dự đoán và phân loại</span></li>
       <li><b>02 · Điều phối</b><span>Luật an toàn + Q-learning → chọn chủ đề</span></li>
       <li><b>03 · Tri thức và trợ giúp</b><span>Web, sách → {backend} → truy xuất và kiểm tra trích dẫn</span></li>
     </ol></section>"""
@@ -87,10 +100,9 @@ def architecture_overview():
 
 def analysis(values=None):
     fields = values if values is not None else dict(DEMO,scope=True)
-    inputs = "".join(f'<label>{label}<input type="text" inputmode="decimal" name="{k}" value="{escape(str(fields.get(k,"")))}"></label>'
-                     for k,label in zip(FIELDS,LABELS))
+    inputs = "".join(profile_input(key,label,str(fields.get(key,""))) for key,label in zip(FIELDS,LABELS))
     checks = "".join(f'<label class="check"><input type="checkbox" name="{k}" {"checked" if fields.get(k) else ""}> {label}</label>'
-                     for k,label in [("scope","Hồ sơ giả định phù hợp phạm vi Pima"),
+                     for k,label in [("scope","Hồ sơ giả định dùng để minh họa mô hình"),
                                      ("active","Có vận động thường xuyên"),
                                      ("urgent","Có dấu hiệu nghiêm trọng như khó thở hoặc nôn liên tục")])
     panel = '<div class="panel"><span class="tag">LUỒNG AGENT</span><h2>Kết quả phân tích</h2><p>Chạy hồ sơ demo để xem điểm mô hình, luật được kích hoạt và nguồn trích dẫn.</p></div>'
@@ -99,7 +111,7 @@ def analysis(values=None):
             result = engine.run(fields)
             p = result["prediction"]
             score = (f'<div class="prediction-pair">'
-                     f'<div><span>Dự đoán MLP</span><strong>{p["score"]:.1%}</strong><small>Điểm đã hiệu chỉnh</small></div>'
+                     f'<div><span>Dự đoán MLP</span><strong>{p["score"]:.1%}</strong><small>{'Đủ xét nghiệm' if result["model_name"]=="full" else 'Sàng lọc thiếu xét nghiệm'}</small></div>'
                      f'<div><span>Phân loại</span><strong>Lớp {p["label"]}</strong><small>Ngưỡng {p["threshold"]:.2f}</small></div>'
                      f'</div>' if p else "")
             comparison = ""
@@ -117,10 +129,10 @@ def analysis(values=None):
             if "effects" in result:
                 rows = "".join(f"<li>{escape(field)}: {effect * 100:+.1f} điểm phần trăm</li>"
                                for field, effect in result["effects"][:5])
-                explanation = (f'<details open><summary>Giải thích Shapley</summary>'
-                               f'<p>Mốc trung vị train: {result["reference_score"]:.1%}. '
+                explanation = (f'<details open><summary>Độ nhạy từng biến</summary>'
+                               f'<p>Thay riêng từng biến bằng giá trị tham chiếu từ tập train. '
                                f'Tối đa năm đóng góp lớn nhất theo trị tuyệt đối.</p>'
-                               f'<ul>{rows}</ul><small>Đóng góp vào điểm mô hình so với mốc tham chiếu.</small></details>')
+                               f'<ul>{rows}</ul><small>Chênh lệch điểm khi thay một biến. Các chênh lệch này không cộng thành điểm dự đoán.</small></details>')
             imputed = ", ".join(result.get("imputed", []))
             panel = (f'<div class="panel {"alert" if result["rule"]=="R0" else ""}"><span class="tag">LUẬT {result["rule"]}</span>'
                      f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{score}{comparison}{explanation}<p>{escape(result["answer"])}</p>'
@@ -131,11 +143,11 @@ def analysis(values=None):
             panel = f'<div class="panel alert"><h2>Kiểm tra dữ liệu</h2><p>{escape(str(error))}</p></div>'
     explain = ('<label class="check"><input type="checkbox" name="explain" '
                f'{"checked" if fields.get("explain") else ""}> Giải thích đóng góp của các biến</label>')
-    selected = " selected" if fields.get("compare_field") == "BMI" else ""
+    selected = " selected" if fields.get("compare_field") == "bmi" else ""
     value = escape(fields.get("compare_value", ""))
     what_if = ('<details class="what-if"><summary>Thử một giá trị giả định</summary>'
-               '<label>Trường so sánh<select name="compare_field"><option value="Glucose">Glucose 2 giờ OGTT</option>'
-               f'<option value="BMI"{selected}>BMI</option></select></label>'
+               '<label>Trường so sánh<select name="compare_field"><option value="blood_glucose_level">Glucose máu</option>'
+               f'<option value="bmi"{selected}>BMI</option></select></label>'
                f'<label>Giá trị giả định<input name="compare_value" inputmode="decimal" value="{value}"></label></details>')
     return page("Hệ đa tác tử hỗ trợ đái tháo đường","Mô hình học sâu, luật an toàn và tri thức có nguồn trong một luồng phân tích.",
                 f'{architecture_overview()}<div class="columns"><form class="panel" method="post"><span class="tag">HỒ SƠ GIẢ ĐỊNH</span><h2>Dữ liệu đầu vào</h2>'
@@ -151,7 +163,7 @@ def knowledge(values=None):
                                                 context=context)
         context = hits[0]["id"] if hits and mode != "Luật an toàn" else ""
         answer = (f'<article id="current-answer" data-context="{context}"><h2>Phản hồi có nguồn</h2>'
-                  f'<p><small>{escape(mode)}</small></p><p class="answer-text">{escape(message)}</p>'
+                  f'<p><small>{escape(mode)}</small></p><p class="answer-text" style="white-space:pre-line">{escape(message)}</p>'
                   f'<ul>{evidence(hits)}</ul></article>')
     consent = ""
     if os.getenv("GEMINI_API_KEY"):
@@ -196,17 +208,12 @@ def search_page(query, topic):
 
 def experiments():
     rows = "".join(f'<tr><th>{name}</th>'+ "".join(f'<td>{m[k]:.3f}</td>' for k in
-                   ["auc","ap","recall","precision","f1","brier"])+'</tr>' for name,m in stats["models"].items())
-    items = [("Hồ sơ Pima",stats["n"]),("Mẫu test",stats["split"][2]),
-             ("Hit@3",f'{stats["rag"]["hit3"]:.0%}'),("Reward mô phỏng",f'{stats["rl"]["learned"]:.3f}')]
-    cards = "".join(f'<div class="panel"><small>{k}</small><div class="score">{v}</div></div>' for k,v in items)
-    calibration = stats.get("calibration", {})
-    comparison = (f'<p>Brier MLP trước và sau hiệu chỉnh: {calibration["raw_brier"]:.3f} → {calibration["brier"]:.3f}.</p>'
-                  if calibration else "")
-    return page("Kết quả thực nghiệm","Số liệu được xuất từ notebook đã chạy trên tập dữ liệu Pima.",
-                f'<div class="cards">{cards}</div><div class="panel"><h2>Đánh giá trên tập test</h2><div class="table">'
-                f'<table><tr><th>Mô hình</th><th>ROC-AUC</th><th>AP</th><th>Recall</th><th>Precision</th><th>F1</th><th>Brier</th></tr>'
-                f'{rows}</table></div>{comparison}<p>Ngưỡng chọn trên validation. Reward mô phỏng phục vụ đánh giá PlannerAgent.</p></div>')
+                   ["auc","ap","f1","brier","threshold"])+'</tr>' for name,m in stats["models"].items())
+    return page("Kết quả thực nghiệm","Diabetes Prediction Dataset",f"""
+        <section class="panel"><h2>Đánh giá trên {stats['split'][2]:,} mẫu test</h2>
+        <p>{stats['raw']:,} dòng gốc · {stats['clean']:,} dòng sau làm sạch.</p>
+        <div class="table"><table><tr><th>MLP</th><th>ROC-AUC</th><th>AP</th><th>F1</th><th>Brier</th><th>Ngưỡng</th></tr>
+        {rows}</table></div><p>full dùng đủ hai xét nghiệm. screening dùng sáu trường còn lại.</p></section>""")
 
 
 class Handler(BaseHTTPRequestHandler):
