@@ -1,0 +1,92 @@
+[
+  {
+    "id": "K01",
+    "topic": "Cấp cứu",
+    "title": "Dấu hiệu nhiễm toan ceton",
+    "keys": "khó thở nôn liên tục hơi thở trái cây ketone cấp cứu",
+    "url": "https://www.cdc.gov/diabetes/about/diabetic-ketoacidosis.html",
+    "text": "Khó thở, nôn đến mức không giữ được thức ăn hoặc nước uống, và hơi thở mùi trái cây có thể là dấu hiệu cần cấp cứu khi nghi nhiễm toan ceton.",
+    "source": "CDC"
+  },
+  {
+    "id": "K02",
+    "topic": "Xét nghiệm",
+    "title": "Xét nghiệm A1C",
+    "keys": "a1c hba1c trung bình ba tháng",
+    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+    "text": "A1C phản ánh mức đường huyết trung bình trong khoảng ba tháng gần đây. Nhân viên y tế có thể giải thích kết quả và chỉ định bước tiếp theo.",
+    "source": "CDC"
+  },
+  {
+    "id": "K03",
+    "topic": "Xét nghiệm",
+    "title": "Nghiệm pháp dung nạp glucose",
+    "keys": "ogtt hai giờ glucose dung nạp",
+    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+    "text": "OGTT đo đáp ứng đường huyết sau khi uống dung dịch glucose. Kết quả hai giờ thuộc một quy trình xét nghiệm có chuẩn bị cụ thể.",
+    "source": "CDC"
+  },
+  {
+    "id": "K04",
+    "topic": "Xét nghiệm",
+    "title": "Glucose lúc đói",
+    "keys": "xét nghiệm nhịn ăn đường huyết lúc đói",
+    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+    "text": "Xét nghiệm glucose lúc đói đo đường huyết sau thời gian nhịn ăn theo hướng dẫn của cơ sở xét nghiệm.",
+    "source": "CDC"
+  },
+  {
+    "id": "K05",
+    "topic": "Theo dõi",
+    "title": "Nhận biết triệu chứng",
+    "keys": "khát nước tiểu nhiều mờ mắt triệu chứng theo dõi",
+    "url": "https://www.cdc.gov/diabetes/signs-symptoms/",
+    "text": "Khát nhiều, tiểu nhiều và nhìn mờ là các triệu chứng có thể gặp. Một số người có ít triệu chứng trong giai đoạn đầu.",
+    "source": "CDC"
+  },
+  {
+    "id": "K06",
+    "topic": "Vận động",
+    "title": "Hoạt động thể lực",
+    "keys": "vận động hoạt động thể lực đi bộ phòng ngừa",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK619261/",
+    "text": "Các nghiên cứu dự phòng đái tháo đường típ 2 ghi nhận lợi ích của chương trình thay đổi lối sống có thành phần vận động.",
+    "source": "Diabetes in America, NIDDK"
+  },
+  {
+    "id": "K07",
+    "topic": "Dinh dưỡng",
+    "title": "Mô hình đĩa ăn",
+    "keys": "đĩa ăn rau tinh bột protein dinh dưỡng",
+    "url": "https://www.cdc.gov/diabetes/healthy-eating/diabetes-meal-planning.html",
+    "text": "Phương pháp đĩa ăn minh họa cách phân bố rau không tinh bột, thực phẩm giàu đạm và thực phẩm chứa carbohydrate trong một bữa ăn.",
+    "source": "CDC"
+  },
+  {
+    "id": "K08",
+    "topic": "Dinh dưỡng",
+    "title": "Đồ uống trong bữa ăn",
+    "keys": "đồ uống nước ngọt nước lọc dinh dưỡng",
+    "url": "https://www.cdc.gov/diabetes/healthy-eating/diabetes-meal-planning.html",
+    "text": "Nước lọc hoặc đồ uống không đường là lựa chọn có thể dùng cùng phương pháp đĩa ăn.",
+    "source": "CDC"
+  },
+  {
+    "id": "K09",
+    "topic": "Theo dõi",
+    "title": "Trao đổi về xét nghiệm",
+    "keys": "theo dõi đường huyết kiểm tra",
+    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+    "text": "Trao đổi với nhân viên y tế về xét nghiệm phù hợp với tình trạng và kế hoạch chăm sóc.",
+    "source": "CDC"
+  },
+  {
+    "id": "K10",
+    "topic": "Vận động",
+    "title": "Chương trình thay đổi lối sống",
+    "keys": "chương trình vận động duy trì phòng ngừa lối sống",
+    "url": "https://www.ncbi.nlm.nih.gov/books/NBK619261/",
+    "text": "Can thiệp dự phòng thường kết hợp hoạt động thể lực, điều chỉnh ăn uống và hỗ trợ duy trì hành vi.",
+    "source": "Diabetes in America, NIDDK"
+  }
+]
