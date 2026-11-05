@@ -3,6 +3,8 @@ from html import escape
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import os
+import threading
+import time
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 from agents import Coordinator, FIELDS, read
@@ -12,7 +14,32 @@ if __name__ == "__main__" and os.getenv("RENDER") == "true" and not os.getenv("N
     install_signal_handler()
     raise SystemExit(serve())
 
-engine = Coordinator()
+engine = None if os.getenv("DIAAGENT_STARTING_DB") == "1" else Coordinator()
+
+
+def initialize_engine():
+    global engine
+    from neo4j import GraphDatabase
+    from neo4j.exceptions import ServiceUnavailable
+
+    deadline = time.monotonic() + 360
+    try:
+        with GraphDatabase.driver(os.environ["NEO4J_URI"], auth=None, connection_timeout=2) as driver:
+            while time.monotonic() < deadline:
+                try:
+                    driver.verify_connectivity()
+                    break
+                except ServiceUnavailable:
+                    time.sleep(2)
+            else:
+                raise RuntimeError("Neo4j readiness timeout")
+        engine = Coordinator()
+        print("Neo4j knowledge base ready", flush=True)
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        os._exit(1)
+
 stats = read("results/summary.json")
 ROOT = Path(__file__).resolve().parent
 CSS = (ROOT/"style.css").read_text(encoding="utf-8")
@@ -113,13 +140,19 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
         if path=="/health":
+            if engine is None:
+                return self.respond('{"status":"starting"}', "application/json", 503)
             return self.respond(json.dumps({"status": "ok", "knowledge_backend": engine.backend}), "application/json")
+        if engine is None:
+            return self.respond("Kho tri thức đang khởi động. Vui lòng tải lại trang sau.", "text/plain; charset=utf-8", 503)
         pages = {"/":analysis,"/tri-thuc":knowledge,"/thuc-nghiem":experiments}
         if path not in pages:
             return self.respond("Không tìm thấy trang.","text/plain; charset=utf-8",404)
         self.respond(pages[path]())
 
     def do_POST(self):
+        if engine is None:
+            return self.respond("Kho tri thức đang khởi động. Vui lòng thử lại sau.", "text/plain; charset=utf-8", 503)
         path = urlsplit(self.path).path
         try:
             size = int(self.headers.get("Content-Length",0))
@@ -139,5 +172,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__=="__main__":
+    if engine is None:
+        threading.Thread(target=initialize_engine, daemon=True).start()
     ThreadingHTTPServer(("0.0.0.0",int(os.getenv("PORT","8000"))),Handler).serve_forever()
 
