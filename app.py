@@ -1,10 +1,16 @@
 """Project 01 demo. Forms are request-local and the app does not store submissions."""
 from html import escape
+import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import os
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 from agents import Coordinator, FIELDS, read
+
+if __name__ == "__main__" and os.getenv("RENDER") == "true" and not os.getenv("NEO4J_URI"):
+    from render_start import install_signal_handler, serve
+    install_signal_handler()
+    raise SystemExit(serve())
 
 engine = Coordinator()
 stats = read("results/summary.json")
@@ -64,12 +70,17 @@ def knowledge(values=None):
     question = values.get("question","") if values else ""
     answer = ""
     if question:
-        message,hits = engine.ask(question)
-        answer = f'<h2>Phản hồi có nguồn</h2><p>{escape(message)}</p><ul>{evidence(hits)}</ul>'
+        message,hits,mode = engine.ask_detail(question, allow_external=values.get("external") == "on")
+        answer = (f'<h2>Phản hồi có nguồn</h2><p><small>{escape(mode)}</small></p>'
+                  f'<p>{escape(message)}</p><ul>{evidence(hits)}</ul>')
+    consent = ""
+    if os.getenv("GEMINI_API_KEY"):
+        consent = ('<label class="check"><input type="checkbox" name="external"> '
+                   'Dùng Gemini để diễn giải. Chỉ nhập câu hỏi kiến thức chung.</label>')
     return page("Hỏi đáp tri thức","Tra cứu đoạn tóm lược từ CDC và sách Diabetes in America.",
                 f'<div class="panel"><form method="post"><label>Câu hỏi<input name="question" maxlength="300" '
                 f'value="{escape(question)}" placeholder="Ví dụ: Xét nghiệm HbA1c phản ánh bao lâu?"></label>'
-                f'<button>Tra cứu</button></form>{answer}</div>'
+                f'{consent}<button>Tra cứu</button></form>{answer}</div>'
                 f'<div class="panel"><h2>Kho tri thức</h2><p>{len(engine.kb.docs)} đoạn · {engine.backend}</p>'
                 f'<ul>{evidence(engine.kb.docs)}</ul></div>')
 
@@ -80,10 +91,13 @@ def experiments():
     items = [("Hồ sơ Pima",stats["n"]),("Mẫu test",stats["split"][2]),
              ("Hit@3",f'{stats["rag"]["hit3"]:.0%}'),("Reward mô phỏng",f'{stats["rl"]["learned"]:.3f}')]
     cards = "".join(f'<div class="panel"><small>{k}</small><div class="score">{v}</div></div>' for k,v in items)
+    calibration = stats.get("calibration", {})
+    comparison = (f'<p>Brier MLP trước và sau hiệu chỉnh: {calibration["raw_brier"]:.3f} → {calibration["brier"]:.3f}.</p>'
+                  if calibration else "")
     return page("Kết quả thực nghiệm","Số liệu được xuất từ notebook đã chạy trên tập dữ liệu Pima.",
                 f'<div class="cards">{cards}</div><div class="panel"><h2>Đánh giá trên tập test</h2><div class="table">'
                 f'<table><tr><th>Mô hình</th><th>ROC-AUC</th><th>AP</th><th>Recall</th><th>Precision</th><th>F1</th><th>Brier</th></tr>'
-                f'{rows}</table></div><p>Ngưỡng chọn trên validation. Reward mô phỏng phục vụ đánh giá PlannerAgent.</p></div>')
+                f'{rows}</table></div>{comparison}<p>Ngưỡng chọn trên validation. Reward mô phỏng phục vụ đánh giá PlannerAgent.</p></div>')
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -99,7 +113,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
         if path=="/health":
-            return self.respond('{"status":"ok"}',"application/json")
+            return self.respond(json.dumps({"status": "ok", "knowledge_backend": engine.backend}), "application/json")
         pages = {"/":analysis,"/tri-thuc":knowledge,"/thuc-nghiem":experiments}
         if path not in pages:
             return self.respond("Không tìm thấy trang.","text/plain; charset=utf-8",404)

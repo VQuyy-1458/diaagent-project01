@@ -5,6 +5,7 @@ import re
 import unicodedata
 from collections import Counter
 from pathlib import Path
+from answering import answer_from_evidence, format_claims
 
 ROOT = Path(__file__).resolve().parent
 FIELDS = "Pregnancies Glucose BloodPressure SkinThickness Insulin BMI DPF Age".split()
@@ -30,7 +31,8 @@ def graph():
         return docs, "Đồ thị JSON"
     from neo4j import GraphDatabase
     with GraphDatabase.driver(os.environ["NEO4J_URI"],
-                              auth=(os.getenv("NEO4J_USER", "neo4j"), os.environ["NEO4J_PASSWORD"])) as driver:
+                              auth=(os.getenv("NEO4J_USER", "neo4j"), os.environ["NEO4J_PASSWORD"])
+                              if os.getenv("NEO4J_PASSWORD") else None) as driver:
         options = {"database_": os.getenv("NEO4J_DATABASE", "neo4j")}
         driver.execute_query("""
             UNWIND $docs AS row
@@ -64,8 +66,13 @@ class KnowledgeAgent:
         norm = math.sqrt(sum(v*v for v in weights.values())) or 1
         return {t:v/norm for t,v in weights.items()}
 
-    def answer(self, question, topic=None):
-        q = self.vector(Counter(words(question)))
+    def retrieve(self, question, topic=None):
+        normalized = " ".join(words(question))
+        aliases = {"hba1c": "a1c", "duong huyet luc doi": "glucose nhin an",
+                   "nghiem phap dung nap duong": "ogtt glucose",
+                   "an uong lanh manh": "dinh duong dia an"}
+        additions = [v for phrase,v in aliases.items() if phrase in normalized]
+        q = self.vector(Counter(words(" ".join([question, *additions]))))
         hits = []
         for d,v in zip(self.docs,self.vectors):
             if topic and d["topic"] != topic:
@@ -74,9 +81,19 @@ class KnowledgeAgent:
             if score >= .12:
                 hits.append(dict(d, score=round(score,4)))
         hits.sort(key=lambda d: (-d["score"],d["id"]))
-        hits = hits[:3]
-        answer = " ".join(f'{d["text"]} [{d["id"]}]' for d in hits)
-        return answer or "Kho tri thức chưa tìm thấy đoạn đủ phù hợp.", hits
+        return hits[:3]
+
+    def respond(self, question, topic=None, *, allow_external=False):
+        hits = self.retrieve(question, topic)
+        if not hits:
+            return "Kho tri thức chưa tìm thấy đoạn đủ phù hợp.", [], "Thiếu bằng chứng"
+        claims, mode = answer_from_evidence(question, hits, allow_external=allow_external)
+        cited = {cid for claim in claims for cid in claim["evidence_ids"]}
+        return format_claims(claims), [d for d in hits if d["id"] in cited], mode
+
+    def answer(self, question, topic=None):
+        text, hits, _ = self.respond(question, topic)
+        return text, hits
 
 
 class SafetyAgent:
@@ -114,7 +131,9 @@ class PredictionAgent:
             h = [sum(v*w for v,w in zip(h,col))+b for col,b in zip(zip(*weights),bias)]
             if i < len(m["bias"])-1:
                 h = [max(v,0) for v in h]
-        score = 1/(1+math.exp(-max(-60,min(60,h[0]))))
+        slope, intercept = m.get("calibration", [1.0, 0.0])
+        logit = slope * h[0] + intercept
+        score = 1/(1+math.exp(-max(-60,min(60,logit))))
         return dict(score=score,label=int(score>=m["threshold"]),threshold=m["threshold"])
 
 
@@ -139,12 +158,23 @@ class Coordinator:
                 [d for d in self.kb.docs if d["id"]=="K01"])
 
     def ask(self, question):
+        text, hits, _ = self.ask_detail(question)
+        return text, hits
+
+    def ask_detail(self, question, *, allow_external=False):
         query = " ".join(words(question))
         if any(p in query for p in ("kho tho","bat tinh","hon me","non lien tuc","ketone cao","tho mui trai cay")):
-            return self.emergency()
+            text, hits = self.emergency()
+            return text, hits, "Luật an toàn"
         if any(p in query for p in ("lieu insulin","tang lieu","giam lieu","ngung thuoc")):
-            return "Hãy trao đổi với nhân viên y tế phụ trách điều trị về liều hoặc thay đổi thuốc.",[]
-        return self.kb.answer(question)
+            return "Hãy trao đổi với nhân viên y tế phụ trách điều trị về liều hoặc thay đổi thuốc.", [], "Luật an toàn"
+        faq = {"hba1c la gi": "K02", "ogtt la gi": "K03", "duong huyet luc doi la gi": "K04"}
+        source_id = faq.get(query)
+        if source_id:
+            for item in self.kb.docs:
+                if item["id"] == source_id:
+                    return f'{item["text"]} [{source_id}]', [item], "FAQ"
+        return self.kb.respond(question, allow_external=allow_external)
 
     def run(self, profile):
         rule,values = SafetyAgent.inspect(profile)
@@ -165,10 +195,10 @@ class Coordinator:
                 result["state"] = state
                 result["trace"].append("PlannerAgent")
             result["topic"] = TOPICS[action]
-            result["answer"],result["evidence"] = self.kb.answer(QUERIES[action],TOPICS[action])
+            result["answer"],result["evidence"],result["answer_mode"] = self.kb.respond(QUERIES[action],TOPICS[action])
             if rule=="R3":
                 result["answer"] = "Kết quả OGTT cần được trao đổi với nhân viên y tế. "+result["answer"]
-            result["trace"].append("KnowledgeAgent")
+            result["trace"].extend(["KnowledgeAgent", "Answerer", "CitationVerifier"])
         result["trace"].append("Coordinator")
         return result
 
