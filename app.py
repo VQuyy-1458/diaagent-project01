@@ -136,7 +136,7 @@ def analysis(values=None):
                                f'<ul>{rows}</ul><small>Chênh lệch điểm khi thay một biến. Các chênh lệch này không cộng thành điểm dự đoán.</small></details>')
             imputed = ", ".join(result.get("imputed", []))
             panel = (f'<div class="panel {"alert" if result["rule"]=="R0" else ""}"><span class="tag">LUẬT {result["rule"]}</span>'
-                     f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{report_details(result)}{score}{comparison}{explanation}<p>{escape(result["answer"])}</p>'
+                     f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{score}{report_details(result)}{comparison}{explanation}<p>{escape(result["answer"])}</p>'
                      + (f'<p><small>Biến điền trung vị: {escape(imputed)}</small></p>' if imputed else "")
                      + f'<ul>{evidence(result["evidence"])}</ul><hr><h3>Vết điều phối</h3>'
                      + '<div class="flow">' + "".join(f'<span>{a}</span>' for a in result["trace"]) + '</div></div>')
