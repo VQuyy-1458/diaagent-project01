@@ -1,0 +1,9 @@
+{
+  "version": "cdc-testing-2024-v2",
+  "source": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+  "hba1c_diabetes": 6.5,
+  "hba1c_prediabetes": 5.7,
+  "glucose_fasting": 126,
+  "glucose_random": 200,
+  "professional_review": false
+}

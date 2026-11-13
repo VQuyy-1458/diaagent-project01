@@ -238,5 +238,27 @@
       "tien su gia dinh",
       "di truyen"
     ]
+  },
+  {
+    "id": "K22",
+    "head": "HbA1c",
+    "relation": "Ngưỡng tham khảo",
+    "tail": "HbA1c từ 6,5%",
+    "aliases": [
+      "nguong hba1c",
+      "hba1c cao",
+      "chi so hba1c"
+    ]
+  },
+  {
+    "id": "K23",
+    "head": "Glucose",
+    "relation": "Ngưỡng theo thời điểm",
+    "tail": "Lúc đói hoặc bất kỳ",
+    "aliases": [
+      "nguong glucose",
+      "glucose luc doi",
+      "glucose bat ky"
+    ]
   }
 ]

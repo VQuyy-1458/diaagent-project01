@@ -8,7 +8,8 @@ import time
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 from agents import FAQ, read
-from large_agent import LargeCoordinator as Coordinator
+from mas_v2 import CoordinatorV2 as Coordinator, MODEL_VERSION, VERSION
+from v2_ui import report_details, monitoring_page
 from large_model import CATEGORIES, FIELDS
 
 if __name__ == "__main__" and os.getenv("RENDER") == "true" and not os.getenv("NEO4J_URI"):
@@ -67,8 +68,8 @@ def page(title, description, content):
     return f"""<!doctype html><html lang="vi"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} | DiaAgent</title><style>{CSS}</style><script src="/interface.js" defer></script><body>
-<header><a class="brand" href="/">DiaAgent <small>PROJECT 01</small></a>
-<nav><a href="/">Phân tích</a><a href="/tri-thuc">Hỏi đáp</a><a href="/faq">FAQ</a><a href="/tra-cuu">Tra cứu</a><a href="/thuc-nghiem">Thực nghiệm</a><button type="button" id="theme" aria-pressed="false">Sáng / tối</button></nav></header>
+<header><a class="brand" href="/">DiaAgent <small>PROJECT 01 · V2</small></a>
+<nav><a href="/">Phân tích</a><a href="/tri-thuc">Hỏi đáp</a><a href="/faq">FAQ</a><a href="/tra-cuu">Tra cứu</a><a href="/thuc-nghiem">Thực nghiệm</a><a href="/giam-sat">Giám sát</a><button type="button" id="theme" aria-pressed="false">Sáng / tối</button></nav></header>
 <main><div class="hero"><div class="eyebrow">PHÁT TRIỂN CÁC HỆ THỐNG THÔNG MINH</div>
 <h1>{title}</h1><p>{description}</p></div>
 <div class="notice">Bản demo học thuật dùng hồ sơ giả định. Kết quả mô hình chỉ phục vụ minh họa và không thay thế đánh giá y tế.</div>
@@ -93,8 +94,8 @@ def architecture_overview():
     <span class="backend">Kho tri thức · {backend}</span></div>
     <ol class="architecture-steps">
       <li><b>01 · Dữ liệu và học sâu</b><span>Kaggle → MLP → dự đoán và phân loại</span></li>
-      <li><b>02 · Điều phối</b><span>Luật an toàn + Q-learning → chọn chủ đề</span></li>
-      <li><b>03 · Tri thức và trợ giúp</b><span>Web, sách → {backend} → truy xuất và kiểm tra trích dẫn</span></li>
+      <li><b>02 · Điều phối</b><span>Data → dự đoán → luật → giải thích</span></li>
+      <li><b>03 · Tri thức và trợ giúp</b><span>Long Châu + CDC → {backend} → BM25, đồ thị, RRF</span></li>
     </ol></section>"""
 
 
@@ -126,7 +127,7 @@ def analysis(values=None):
                 except ValueError as exc:
                     comparison = f'<p class="notice">{escape(str(exc))}</p>'
             explanation = ""
-            if "effects" in result:
+            if result.get("effects"):
                 rows = "".join(f"<li>{escape(field)}: {effect * 100:+.1f} điểm phần trăm</li>"
                                for field, effect in result["effects"][:5])
                 explanation = (f'<details open><summary>Độ nhạy từng biến</summary>'
@@ -135,12 +136,12 @@ def analysis(values=None):
                                f'<ul>{rows}</ul><small>Chênh lệch điểm khi thay một biến. Các chênh lệch này không cộng thành điểm dự đoán.</small></details>')
             imputed = ", ".join(result.get("imputed", []))
             panel = (f'<div class="panel {"alert" if result["rule"]=="R0" else ""}"><span class="tag">LUẬT {result["rule"]}</span>'
-                     f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{score}{comparison}{explanation}<p>{escape(result["answer"])}</p>'
+                     f'<h2>{result["topic"] or "Kết quả kiểm tra hồ sơ"}</h2>{report_details(result)}{score}{comparison}{explanation}<p>{escape(result["answer"])}</p>'
                      + (f'<p><small>Biến điền trung vị: {escape(imputed)}</small></p>' if imputed else "")
                      + f'<ul>{evidence(result["evidence"])}</ul><hr><h3>Vết điều phối</h3>'
                      + '<div class="flow">' + "".join(f'<span>{a}</span>' for a in result["trace"]) + '</div></div>')
         except ValueError as error:
-            panel = f'<div class="panel alert"><h2>Kiểm tra dữ liệu</h2><p>{escape(str(error))}</p></div>'
+            panel = f'<div class="panel alert" role="alert"><h2>Kiểm tra dữ liệu</h2><p>{escape(str(error))}</p></div>'
     explain = ('<label class="check"><input type="checkbox" name="explain" '
                f'{"checked" if fields.get("explain") else ""}> Giải thích đóng góp của các biến</label>')
     selected = " selected" if fields.get("compare_field") == "bmi" else ""
@@ -149,9 +150,14 @@ def analysis(values=None):
                '<label>Trường so sánh<select name="compare_field"><option value="blood_glucose_level">Glucose máu</option>'
                f'<option value="bmi"{selected}>BMI</option></select></label>'
                f'<label>Giá trị giả định<input name="compare_value" inputmode="decimal" value="{value}"></label></details>')
-    return page("Hệ đa tác tử hỗ trợ đái tháo đường","Mô hình học sâu, luật an toàn và tri thức có nguồn trong một luồng phân tích.",
+    return page("Hệ đa tác tử hỗ trợ đái tháo đường","DiaAgent v2 kết hợp mô hình, cờ luật, bằng chứng và giám sát từng lượt.",
                 f'{architecture_overview()}<div class="columns"><form class="panel" method="post"><span class="tag">HỒ SƠ GIẢ ĐỊNH</span><h2>Dữ liệu đầu vào</h2>'
-                f'<div class="fields">{inputs}</div>{checks}{explain}{what_if}<button>Chạy phân tích</button></form>{panel}</div>')
+                f'<div class="fields">{inputs}</div>'
+                '<label>Thời điểm đo glucose<select name="glucose_timing"><option value="unknown">Chưa rõ</option>'
+                f'<option value="fasting" {"selected" if fields.get("glucose_timing")=="fasting" else ""}>Lúc đói</option>'
+                f'<option value="random" {"selected" if fields.get("glucose_timing")=="random" else ""}>Bất kỳ</option></select></label>'
+                f'<label>Câu hỏi kèm hồ sơ<input name="question" maxlength="600" value="{escape(str(fields.get("question","")))}"></label>'
+                f'{checks}{explain}{what_if}<button>Chạy phân tích</button></form>{panel}</div>')
 
 
 def knowledge(values=None):
@@ -159,12 +165,16 @@ def knowledge(values=None):
     answer = ""
     if question.strip():
         context = values.get("context", "")
-        message, hits, mode = engine.ask_detail(question, allow_external=values.get("external") == "on",
-                                                context=context)
+        result=engine.assess(question=question, allow_external=values.get("external")=="on", context=context)
+        message, hits, mode=result["answer"],result["evidence"],result["answer_mode"]
+        if any(f["id"] in ("R00","R01") for f in result["flags"]):
+            mode="Luật an toàn"
+        elif question in FAQ:
+            mode="FAQ"
         context = hits[0]["id"] if hits and mode != "Luật an toàn" else ""
         answer = (f'<article id="current-answer" data-context="{context}"><h2>{"Phản hồi có nguồn" if hits else "Phản hồi"}</h2>'
                   f'<p><small>{escape(mode)}</small></p><p class="answer-text" style="white-space:pre-line">{escape(message)}</p>'
-                  f'<ul>{evidence(hits)}</ul></article>')
+                  f'<ul>{evidence(hits)}</ul>{report_details(result)}</article>')
     consent = ""
     if os.getenv("GEMINI_API_KEY"):
         consent = ('<label class="check"><input type="checkbox" name="external"> '
@@ -216,7 +226,14 @@ def experiments():
         <section class="panel"><h2>Đánh giá trên {stats['split'][2]:,} mẫu test</h2>
         <p>{stats['raw']:,} dòng gốc · {stats['clean']:,} dòng sau làm sạch.</p>
         <div class="table"><table><tr><th>MLP</th><th>ROC-AUC</th><th>AP</th><th>F1</th><th>Brier</th><th>Ngưỡng</th></tr>
-        {rows}</table></div><p>full dùng đủ hai xét nghiệm. screening dùng sáu trường còn lại.</p></section>""")
+        {rows}</table></div><p>full dùng đủ hai xét nghiệm. screening dùng sáu trường còn lại.</p></section>""" + v2_experiments())
+
+def v2_experiments():
+    evaluation=read("results/v2_evaluation.json")
+    rows="".join(f'<tr><th>{escape(name)}</th><td>{m["hit1"]:.1%}</td><td>{m["hit3"]:.1%}</td></tr>' for name,m in evaluation["retrieval"].items())
+    return (f'<section class="panel"><h2>Đánh giá truy xuất v2</h2><p>40 câu thử trên cùng kho nguồn. Tập kiểm thử nội bộ.</p>'
+            '<div class="table"><table><tr><th>Cách tìm kiếm</th><th>Hit@1</th><th>Hit@3</th></tr>'+rows+'</table></div>'
+            f'<p>{evaluation["checks"]} kiểm tra tích hợp đã qua, gồm 6 lượt gây lỗi ở dự đoán, truy xuất và giải thích.</p></section>')
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -238,21 +255,35 @@ class Handler(BaseHTTPRequestHandler):
         path = request.path
         if path == "/interface.js":
             return self.respond(INTERFACE, "text/javascript; charset=utf-8")
-        if path=="/health":
-            return self.respond(json.dumps({"status": "ok", "knowledge_backend": engine.backend}), "application/json")
+        if path in ("/health", "/api/health"):
+            return self.respond(json.dumps({"status": "ok", "version": VERSION, "model_version": MODEL_VERSION,
+                                "knowledge_backend": engine.backend,
+                                "degraded": engine.backend != "Neo4j"}), "application/json")
+        if path=="/api/agents":
+            return self.respond(json.dumps(engine.contracts(),ensure_ascii=False),"application/json")
+        if path=="/api/model-card":
+            return self.respond(json.dumps(read("results/model_card_v2.json"),ensure_ascii=False),"application/json")
+        if path=="/api/metrics":
+            return self.respond(json.dumps(engine.monitor.metrics()),"application/json")
+        if path.startswith("/api/trace/"):
+            record=engine.monitor.trace(path.rsplit("/",1)[-1])
+            return self.respond(json.dumps(record or {"error":"Không tìm thấy mã lượt."},ensure_ascii=False),
+                                "application/json",200 if record else 404)
         if path == "/tra-cuu":
             try:
                 params = parse_qs(request.query, max_num_fields=8)
             except ValueError:
                 return self.respond("Bộ lọc không hợp lệ.", "text/plain; charset=utf-8", 400)
             return self.respond(search_page(params.get("q", [""])[0][:300], params.get("topic", [""])[0]))
-        pages = {"/":analysis,"/tri-thuc":knowledge,"/faq":faq_page,"/thuc-nghiem":experiments}
+        pages = {"/":analysis,"/tri-thuc":knowledge,"/faq":faq_page,"/thuc-nghiem":experiments, "/giam-sat":lambda: monitoring_page(page,engine)}
         if path not in pages:
             return self.respond("Không tìm thấy trang.","text/plain; charset=utf-8",404)
         self.respond(pages[path]())
 
     def do_POST(self):
         path = urlsplit(self.path).path
+        if path.startswith("/api/"):
+            return self.api_post(path)
         try:
             size = int(self.headers.get("Content-Length",0))
             if not 0<size<=8192:
@@ -268,6 +299,35 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(knowledge(fields))
         else:
             self.respond("Không tìm thấy trang.","text/plain; charset=utf-8",404)
+
+
+    def api_post(self, path):
+        if path not in ("/api/assess","/api/ask","/api/simulate"):
+            return self.respond('{"error":"Unknown endpoint"}',"application/json",404)
+        try:
+            if self.headers.get_content_type() != "application/json":
+                raise ValueError("API yêu cầu application/json.")
+            size=int(self.headers.get("Content-Length",0))
+            if not 0 < size <= 32768:
+                raise ValueError("Kích thước JSON không hợp lệ.")
+            body=json.loads(self.rfile.read(size))
+            if not isinstance(body,dict):
+                raise ValueError("Body cần là object.")
+            if path=="/api/simulate":
+                seed=body.get("seed",42)
+                if isinstance(seed,bool) or not isinstance(seed,int):
+                    raise ValueError("seed phải là số nguyên.")
+                result=engine.rl.process(seed=seed,episodes=body.get("episodes",3000))
+            else:
+                profile=body.get("profile") if path=="/api/assess" else None
+                if path=="/api/assess" and not isinstance(profile,dict):
+                    raise ValueError("Cần object profile.")
+                result=engine.assess(profile,body.get("question",""),context=body.get("context",""),
+                                     allow_external=False)
+            status=422 if result.get("status")=="invalid" else 200
+            self.respond(json.dumps(result,ensure_ascii=False,allow_nan=False),"application/json",status)
+        except (ValueError,TypeError,UnicodeDecodeError) as error:
+            self.respond(json.dumps({"error":str(error)},ensure_ascii=False),"application/json",400)
 
 
 if __name__=="__main__":

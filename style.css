@@ -26,3 +26,5 @@ select {display:block;width:100%;padding:.55rem;margin:.25rem 0 .6rem}
 [data-theme=dark] .notice {background:#403720;color:#fff0c9}
 [data-theme=dark] input,[data-theme=dark] select {background:#152e28;color:#f2fcf8;border-color:#73958a}
 [data-theme=dark] footer {color:#c7ded6}
+
+.v2-details{border-top:1px solid #b5ceca;padding:12px 0}.v2-details summary{cursor:pointer;font-weight:650;min-height:28px}.status-pill{display:inline-block;background:#d7ede6;color:#174e41;padding:8px 12px;border-radius:6px;font-weight:650}.request-id{overflow-wrap:anywhere;font-size:13px}textarea{width:100%;padding:12px;box-sizing:border-box;font-family:monospace}header{flex-wrap:wrap}nav{flex-wrap:wrap}summary:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid #b27616;outline-offset:3px}.table{overflow-x:auto}

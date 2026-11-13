@@ -1,0 +1,63 @@
+{
+  "version": "272daa5347ca",
+  "algorithm": "MLPClassifier (24,12), ReLU, sigmoid",
+  "dataset": "Kaggle Diabetes Prediction Dataset",
+  "raw_rows": 100000,
+  "clean_rows": 96128,
+  "split": [
+    67288,
+    14420,
+    14420
+  ],
+  "features": [
+    "gender",
+    "age",
+    "hypertension",
+    "heart_disease",
+    "smoking_history",
+    "bmi",
+    "HbA1c_level",
+    "blood_glucose_level"
+  ],
+  "one_hot": {
+    "gender": [
+      "Female",
+      "Male"
+    ],
+    "smoking_history": [
+      "never",
+      "No Info",
+      "current",
+      "former",
+      "ever",
+      "not current"
+    ]
+  },
+  "preprocessing": "One-hot categories, StandardScaler fitted on train. Full=14 columns; screening=12.",
+  "threshold_selection": "Maximum F1 on validation, test held out",
+  "metrics": {
+    "full": {
+      "auc": 0.9726021892991831,
+      "ap": 0.8648004508929812,
+      "brier": 0.025570186625025793,
+      "f1": 0.790013374944271,
+      "threshold": 0.4022260823734625,
+      "iterations": 120
+    },
+    "screening": {
+      "auc": 0.8271719232233709,
+      "ap": 0.30686495264488023,
+      "brier": 0.06941395332490445,
+      "f1": 0.3746110765401369,
+      "threshold": 0.20834146743352247,
+      "iterations": 40
+    }
+  },
+  "limitations": [
+    "Single split seed=42",
+    "Raw sigmoid score, no post-hoc calibration",
+    "Full reaches 120-iteration cap",
+    "Dataset glucose timing unknown"
+  ],
+  "source": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset"
+}

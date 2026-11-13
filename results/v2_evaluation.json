@@ -1,0 +1,1516 @@
+{
+  "version": "v2.0",
+  "checks": 32,
+  "passed": [
+    "conflict flags",
+    "bounded re-retrieval",
+    "threshold evidence",
+    "same v1 model score",
+    "screening model",
+    "screening review",
+    "preserve partial lab",
+    "invalid age",
+    "invalid bmi",
+    "invalid gender",
+    "invalid hypertension",
+    "outside domain stops inference",
+    "urgent short circuit",
+    "no medication dose",
+    "unrelated abstention",
+    "follow-up context",
+    "follow-up clarification",
+    "BMI computed",
+    "unit conversion",
+    "timing explicit",
+    "rule ablation",
+    "fault prediction",
+    "fault predictionCần theo dõi gì?",
+    "fault knowledge",
+    "fault knowledgeCần theo dõi gì?",
+    "fault explanation",
+    "fault explanationCần theo dõi gì?",
+    "unique concurrent IDs",
+    "concurrent audit complete",
+    "audit privacy",
+    "audit restart",
+    "RL simulation comparison"
+  ],
+  "retrieval": {
+    "lexical": {
+      "hit1": 0.925,
+      "hit3": 1.0,
+      "queries": 40
+    },
+    "bm25": {
+      "hit1": 0.875,
+      "hit3": 1.0,
+      "queries": 40
+    },
+    "hybrid": {
+      "hit1": 0.95,
+      "hit3": 1.0,
+      "queries": 40
+    }
+  },
+  "retrieval_records": [
+    {
+      "mode": "lexical",
+      "question": "HbA1c phản ánh đường huyết trong thời gian nào?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K22",
+        "K04"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Hemoglobin glycat đo cái gì?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K14"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Nghiệm pháp dung nạp đường để làm gì?",
+      "expected": "K03",
+      "hits": [
+        "K03",
+        "K11",
+        "K04"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Đường huyết lúc đói lấy mẫu thế nào?",
+      "expected": "K04",
+      "hits": [
+        "K04",
+        "K09",
+        "K23"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Khát nhiều, tiểu nhiều có phải dấu hiệu thường gặp?",
+      "expected": "K05",
+      "hits": [
+        "K05",
+        "K11"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Đi bộ có giúp phòng tiểu đường không?",
+      "expected": "K06",
+      "hits": [
+        "K06",
+        "K11",
+        "K10"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Nên xây dựng thực đơn ra sao?",
+      "expected": "K07",
+      "hits": [
+        "K07",
+        "K19",
+        "K18"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Có nên uống nước ngọt không?",
+      "expected": "K08",
+      "hits": [
+        "K08"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Vì sao cần ghi thời điểm đo?",
+      "expected": "K09",
+      "hits": [
+        "K09",
+        "K23",
+        "K04"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tiền tiểu đường khác với tiểu đường thế nào?",
+      "expected": "K11",
+      "hits": [
+        "K11",
+        "K05",
+        "K10"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tụt đường có làm vã mồ hôi không?",
+      "expected": "K12",
+      "hits": [
+        "K12",
+        "K05"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Bệnh gây tổn thương thận thế nào?",
+      "expected": "K13",
+      "hits": [
+        "K13"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Hút thuốc ảnh hưởng thế nào?",
+      "expected": "K14",
+      "hits": [
+        "K14",
+        "K10"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Thừa cân có liên quan đến kháng insulin?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K21",
+        "K14"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tiểu đường type 1 là gì?",
+      "expected": "K16",
+      "hits": [
+        "K16",
+        "K17",
+        "K11"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tiểu đường type 2 là gì?",
+      "expected": "K17",
+      "hits": [
+        "K17",
+        "K11",
+        "K10"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Metformin dùng cho bệnh gì?",
+      "expected": "K18",
+      "hits": [
+        "K18",
+        "K03"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Gliclazide có tác dụng phụ nào?",
+      "expected": "K19",
+      "hits": [
+        "K19",
+        "K03",
+        "K10"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Forxiga thuộc nhóm thuốc nào?",
+      "expected": "K20",
+      "hits": [
+        "K20",
+        "K14",
+        "K18"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tiền sử gia đình có ảnh hưởng gì?",
+      "expected": "K21",
+      "hits": [
+        "K21",
+        "K11",
+        "K22"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tiền sử hút thuốc có ảnh hưởng không?",
+      "expected": "K14",
+      "hits": [
+        "K14",
+        "K21",
+        "K11"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Béo phì liên quan tới bệnh như thế nào?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K14"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Nếu bị biến chứng thì cơ quan nào bị ảnh hưởng?",
+      "expected": "K13",
+      "hits": [
+        "K10",
+        "K13"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Chế độ ăn cho người tiểu đường cần chú ý gì?",
+      "expected": "K07",
+      "hits": [
+        "K07",
+        "K11",
+        "K05"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Dapagliflozin là thuốc nhóm gì?",
+      "expected": "K20",
+      "hits": [
+        "K20",
+        "K14"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Thuốc gliclazide có nguy cơ hạ đường không?",
+      "expected": "K19",
+      "hits": [
+        "K19",
+        "K12",
+        "K14"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Xét nghiệm A1C cho biết gì?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K03",
+        "K22"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Đái tháo đường tuýp 1 xảy ra như thế nào?",
+      "expected": "K16",
+      "hits": [
+        "K16",
+        "K17",
+        "K11"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Đái tháo đường tuýp 2 là tình trạng gì?",
+      "expected": "K17",
+      "hits": [
+        "K17",
+        "K11",
+        "K16"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Nước ngọt có phù hợp cho người tiểu đường?",
+      "expected": "K08",
+      "hits": [
+        "K08",
+        "K10",
+        "K11"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Đường huyết lúc đói kiểm tra khi nào?",
+      "expected": "K04",
+      "hits": [
+        "K04",
+        "K09",
+        "K23"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "OGTT là xét nghiệm gì?",
+      "expected": "K03",
+      "hits": [
+        "K03",
+        "K04",
+        "K02"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Khát nhiều và nhìn mờ có liên quan không?",
+      "expected": "K05",
+      "hits": [
+        "K05",
+        "K12",
+        "K04"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Tập thể dục giúp ích gì?",
+      "expected": "K06",
+      "hits": [
+        "K10",
+        "K06"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "BMI cao có ý nghĩa gì?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K11"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Vã mồ hôi khi tụt đường là biểu hiện gì?",
+      "expected": "K12",
+      "hits": [
+        "K12",
+        "K05"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Cần lưu ý thời điểm đo glucose thế nào?",
+      "expected": "K09",
+      "hits": [
+        "K23",
+        "K04",
+        "K09"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Ngưỡng HbA1c nào cần được xem xét?",
+      "expected": "K22",
+      "hits": [
+        "K22",
+        "K02",
+        "K04"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Ngưỡng glucose lúc đói được tham khảo thế nào?",
+      "expected": "K23",
+      "hits": [
+        "K23",
+        "K04",
+        "K22"
+      ]
+    },
+    {
+      "mode": "lexical",
+      "question": "Metformin là gì?",
+      "expected": "K18",
+      "hits": [
+        "K18"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "HbA1c phản ánh đường huyết trong thời gian nào?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K04",
+        "K09",
+        "K23",
+        "K22"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Hemoglobin glycat đo cái gì?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K14"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Nghiệm pháp dung nạp đường để làm gì?",
+      "expected": "K03",
+      "hits": [
+        "K03",
+        "K19",
+        "K02",
+        "K05",
+        "K04"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Đường huyết lúc đói lấy mẫu thế nào?",
+      "expected": "K04",
+      "hits": [
+        "K04",
+        "K09",
+        "K23",
+        "K12",
+        "K11"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Khát nhiều, tiểu nhiều có phải dấu hiệu thường gặp?",
+      "expected": "K05",
+      "hits": [
+        "K05",
+        "K01",
+        "K21",
+        "K12",
+        "K11"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Đi bộ có giúp phòng tiểu đường không?",
+      "expected": "K06",
+      "hits": [
+        "K06",
+        "K10",
+        "K05",
+        "K21",
+        "K13"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Nên xây dựng thực đơn ra sao?",
+      "expected": "K07",
+      "hits": [
+        "K07",
+        "K19",
+        "K18",
+        "K03",
+        "K01"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Có nên uống nước ngọt không?",
+      "expected": "K08",
+      "hits": [
+        "K08",
+        "K01",
+        "K03",
+        "K07"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Vì sao cần ghi thời điểm đo?",
+      "expected": "K09",
+      "hits": [
+        "K09",
+        "K23",
+        "K04",
+        "K07",
+        "K15"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tiền tiểu đường khác với tiểu đường thế nào?",
+      "expected": "K11",
+      "hits": [
+        "K11",
+        "K05",
+        "K15",
+        "K09",
+        "K22"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tụt đường có làm vã mồ hôi không?",
+      "expected": "K12",
+      "hits": [
+        "K12",
+        "K05",
+        "K01",
+        "K14",
+        "K10"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Bệnh gây tổn thương thận thế nào?",
+      "expected": "K13",
+      "hits": [
+        "K13",
+        "K19",
+        "K20",
+        "K14",
+        "K16"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Hút thuốc ảnh hưởng thế nào?",
+      "expected": "K14",
+      "hits": [
+        "K14",
+        "K10",
+        "K13",
+        "K02",
+        "K04"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Thừa cân có liên quan đến kháng insulin?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K21",
+        "K14",
+        "K01",
+        "K16"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tiểu đường type 1 là gì?",
+      "expected": "K16",
+      "hits": [
+        "K16",
+        "K05",
+        "K17",
+        "K11",
+        "K10"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tiểu đường type 2 là gì?",
+      "expected": "K17",
+      "hits": [
+        "K17",
+        "K10",
+        "K05",
+        "K16",
+        "K11"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Metformin dùng cho bệnh gì?",
+      "expected": "K18",
+      "hits": [
+        "K18",
+        "K03",
+        "K19",
+        "K20",
+        "K14"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Gliclazide có tác dụng phụ nào?",
+      "expected": "K19",
+      "hits": [
+        "K19",
+        "K10",
+        "K03",
+        "K18",
+        "K17"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Forxiga thuộc nhóm thuốc nào?",
+      "expected": "K20",
+      "hits": [
+        "K20",
+        "K07",
+        "K14",
+        "K18",
+        "K22"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tiền sử gia đình có ảnh hưởng gì?",
+      "expected": "K21",
+      "hits": [
+        "K21",
+        "K13",
+        "K11",
+        "K22",
+        "K10"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tiền sử hút thuốc có ảnh hưởng không?",
+      "expected": "K14",
+      "hits": [
+        "K14",
+        "K21",
+        "K10",
+        "K13",
+        "K22"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Béo phì liên quan tới bệnh như thế nào?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K14",
+        "K21",
+        "K20",
+        "K16"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Nếu bị biến chứng thì cơ quan nào bị ảnh hưởng?",
+      "expected": "K13",
+      "hits": [
+        "K10",
+        "K13",
+        "K02",
+        "K04",
+        "K15"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Chế độ ăn cho người tiểu đường cần chú ý gì?",
+      "expected": "K07",
+      "hits": [
+        "K05",
+        "K07",
+        "K08",
+        "K10",
+        "K04"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Dapagliflozin là thuốc nhóm gì?",
+      "expected": "K20",
+      "hits": [
+        "K20",
+        "K07",
+        "K14",
+        "K18",
+        "K22"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Thuốc gliclazide có nguy cơ hạ đường không?",
+      "expected": "K19",
+      "hits": [
+        "K19",
+        "K14",
+        "K12",
+        "K21",
+        "K15"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Xét nghiệm A1C cho biết gì?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K03",
+        "K05",
+        "K04",
+        "K12"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Đái tháo đường tuýp 1 xảy ra như thế nào?",
+      "expected": "K16",
+      "hits": [
+        "K16",
+        "K17",
+        "K11",
+        "K22",
+        "K13"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Đái tháo đường tuýp 2 là tình trạng gì?",
+      "expected": "K17",
+      "hits": [
+        "K06",
+        "K17",
+        "K11",
+        "K12",
+        "K16"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Nước ngọt có phù hợp cho người tiểu đường?",
+      "expected": "K08",
+      "hits": [
+        "K10",
+        "K08",
+        "K05",
+        "K12",
+        "K17"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Đường huyết lúc đói kiểm tra khi nào?",
+      "expected": "K04",
+      "hits": [
+        "K04",
+        "K10",
+        "K09",
+        "K23",
+        "K11"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "OGTT là xét nghiệm gì?",
+      "expected": "K03",
+      "hits": [
+        "K03",
+        "K02",
+        "K05",
+        "K04",
+        "K11"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Khát nhiều và nhìn mờ có liên quan không?",
+      "expected": "K05",
+      "hits": [
+        "K05",
+        "K15",
+        "K14",
+        "K21",
+        "K12"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Tập thể dục giúp ích gì?",
+      "expected": "K06",
+      "hits": [
+        "K06",
+        "K10",
+        "K13"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "BMI cao có ý nghĩa gì?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K11",
+        "K18",
+        "K14",
+        "K04"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Vã mồ hôi khi tụt đường là biểu hiện gì?",
+      "expected": "K12",
+      "hits": [
+        "K12",
+        "K05",
+        "K01",
+        "K02",
+        "K13"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Cần lưu ý thời điểm đo glucose thế nào?",
+      "expected": "K09",
+      "hits": [
+        "K23",
+        "K04",
+        "K09",
+        "K11",
+        "K18"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Ngưỡng HbA1c nào cần được xem xét?",
+      "expected": "K22",
+      "hits": [
+        "K22",
+        "K04",
+        "K02",
+        "K23",
+        "K11"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Ngưỡng glucose lúc đói được tham khảo thế nào?",
+      "expected": "K23",
+      "hits": [
+        "K23",
+        "K04",
+        "K22",
+        "K11",
+        "K09"
+      ]
+    },
+    {
+      "mode": "bm25",
+      "question": "Metformin là gì?",
+      "expected": "K18",
+      "hits": [
+        "K18"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "HbA1c phản ánh đường huyết trong thời gian nào?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K04",
+        "K22",
+        "K09",
+        "K23"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Hemoglobin glycat đo cái gì?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K14"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Nghiệm pháp dung nạp đường để làm gì?",
+      "expected": "K03",
+      "hits": [
+        "K03",
+        "K04",
+        "K11",
+        "K19",
+        "K02"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Đường huyết lúc đói lấy mẫu thế nào?",
+      "expected": "K04",
+      "hits": [
+        "K04",
+        "K09",
+        "K23",
+        "K12",
+        "K11"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Khát nhiều, tiểu nhiều có phải dấu hiệu thường gặp?",
+      "expected": "K05",
+      "hits": [
+        "K05",
+        "K11",
+        "K01",
+        "K21",
+        "K12"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Đi bộ có giúp phòng tiểu đường không?",
+      "expected": "K06",
+      "hits": [
+        "K06",
+        "K10",
+        "K11",
+        "K05",
+        "K21"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Nên xây dựng thực đơn ra sao?",
+      "expected": "K07",
+      "hits": [
+        "K07",
+        "K19",
+        "K18",
+        "K03",
+        "K01"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Có nên uống nước ngọt không?",
+      "expected": "K08",
+      "hits": [
+        "K08",
+        "K01",
+        "K03",
+        "K07"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Vì sao cần ghi thời điểm đo?",
+      "expected": "K09",
+      "hits": [
+        "K09",
+        "K23",
+        "K04",
+        "K07",
+        "K15"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tiền tiểu đường khác với tiểu đường thế nào?",
+      "expected": "K11",
+      "hits": [
+        "K11",
+        "K05",
+        "K10",
+        "K15",
+        "K09"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tụt đường có làm vã mồ hôi không?",
+      "expected": "K12",
+      "hits": [
+        "K12",
+        "K05",
+        "K01",
+        "K14",
+        "K10"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Bệnh gây tổn thương thận thế nào?",
+      "expected": "K13",
+      "hits": [
+        "K13",
+        "K19",
+        "K20",
+        "K14",
+        "K16"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Hút thuốc ảnh hưởng thế nào?",
+      "expected": "K14",
+      "hits": [
+        "K14",
+        "K10",
+        "K13",
+        "K02",
+        "K04"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Thừa cân có liên quan đến kháng insulin?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K21",
+        "K14",
+        "K01",
+        "K16"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tiểu đường type 1 là gì?",
+      "expected": "K16",
+      "hits": [
+        "K16",
+        "K17",
+        "K11",
+        "K05",
+        "K10"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tiểu đường type 2 là gì?",
+      "expected": "K17",
+      "hits": [
+        "K17",
+        "K16",
+        "K11",
+        "K10",
+        "K05"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Metformin dùng cho bệnh gì?",
+      "expected": "K18",
+      "hits": [
+        "K18",
+        "K03",
+        "K19",
+        "K20",
+        "K14"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Gliclazide có tác dụng phụ nào?",
+      "expected": "K19",
+      "hits": [
+        "K19",
+        "K03",
+        "K10",
+        "K18",
+        "K17"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Forxiga thuộc nhóm thuốc nào?",
+      "expected": "K20",
+      "hits": [
+        "K20",
+        "K14",
+        "K18",
+        "K07",
+        "K22"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tiền sử gia đình có ảnh hưởng gì?",
+      "expected": "K21",
+      "hits": [
+        "K21",
+        "K11",
+        "K22",
+        "K13",
+        "K10"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tiền sử hút thuốc có ảnh hưởng không?",
+      "expected": "K14",
+      "hits": [
+        "K14",
+        "K21",
+        "K11",
+        "K10",
+        "K13"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Béo phì liên quan tới bệnh như thế nào?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K14",
+        "K21",
+        "K20",
+        "K16"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Nếu bị biến chứng thì cơ quan nào bị ảnh hưởng?",
+      "expected": "K13",
+      "hits": [
+        "K10",
+        "K13",
+        "K02",
+        "K04",
+        "K15"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Chế độ ăn cho người tiểu đường cần chú ý gì?",
+      "expected": "K07",
+      "hits": [
+        "K07",
+        "K08",
+        "K11",
+        "K05",
+        "K10"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Dapagliflozin là thuốc nhóm gì?",
+      "expected": "K20",
+      "hits": [
+        "K20",
+        "K14",
+        "K07",
+        "K18",
+        "K22"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Thuốc gliclazide có nguy cơ hạ đường không?",
+      "expected": "K19",
+      "hits": [
+        "K19",
+        "K12",
+        "K14",
+        "K21",
+        "K15"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Xét nghiệm A1C cho biết gì?",
+      "expected": "K02",
+      "hits": [
+        "K02",
+        "K03",
+        "K22",
+        "K05",
+        "K04"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Đái tháo đường tuýp 1 xảy ra như thế nào?",
+      "expected": "K16",
+      "hits": [
+        "K16",
+        "K17",
+        "K11",
+        "K22",
+        "K13"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Đái tháo đường tuýp 2 là tình trạng gì?",
+      "expected": "K17",
+      "hits": [
+        "K17",
+        "K11",
+        "K16",
+        "K06",
+        "K12"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Nước ngọt có phù hợp cho người tiểu đường?",
+      "expected": "K08",
+      "hits": [
+        "K08",
+        "K10",
+        "K05",
+        "K11",
+        "K12"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Đường huyết lúc đói kiểm tra khi nào?",
+      "expected": "K04",
+      "hits": [
+        "K04",
+        "K09",
+        "K23",
+        "K10",
+        "K11"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "OGTT là xét nghiệm gì?",
+      "expected": "K03",
+      "hits": [
+        "K03",
+        "K02",
+        "K04",
+        "K05",
+        "K11"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Khát nhiều và nhìn mờ có liên quan không?",
+      "expected": "K05",
+      "hits": [
+        "K05",
+        "K12",
+        "K04",
+        "K15",
+        "K14"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Tập thể dục giúp ích gì?",
+      "expected": "K06",
+      "hits": [
+        "K06",
+        "K10",
+        "K13"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "BMI cao có ý nghĩa gì?",
+      "expected": "K15",
+      "hits": [
+        "K15",
+        "K11",
+        "K18",
+        "K14",
+        "K04"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Vã mồ hôi khi tụt đường là biểu hiện gì?",
+      "expected": "K12",
+      "hits": [
+        "K12",
+        "K05",
+        "K01",
+        "K02",
+        "K13"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Cần lưu ý thời điểm đo glucose thế nào?",
+      "expected": "K09",
+      "hits": [
+        "K23",
+        "K09",
+        "K04",
+        "K11",
+        "K18"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Ngưỡng HbA1c nào cần được xem xét?",
+      "expected": "K22",
+      "hits": [
+        "K22",
+        "K02",
+        "K04",
+        "K23",
+        "K11"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Ngưỡng glucose lúc đói được tham khảo thế nào?",
+      "expected": "K23",
+      "hits": [
+        "K23",
+        "K04",
+        "K22",
+        "K11",
+        "K09"
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "question": "Metformin là gì?",
+      "expected": "K18",
+      "hits": [
+        "K18"
+      ]
+    }
+  ],
+  "faults": [
+    {
+      "component": "prediction",
+      "status": "degraded",
+      "messages": [
+        "ok",
+        "error",
+        "ok",
+        "degraded",
+        "degraded",
+        "ok"
+      ]
+    },
+    {
+      "component": "prediction",
+      "status": "degraded",
+      "messages": [
+        "ok",
+        "error",
+        "ok",
+        "degraded",
+        "degraded",
+        "ok"
+      ]
+    },
+    {
+      "component": "knowledge",
+      "status": "degraded",
+      "messages": [
+        "ok",
+        "ok",
+        "ok",
+        "error",
+        "error",
+        "degraded"
+      ]
+    },
+    {
+      "component": "knowledge",
+      "status": "degraded",
+      "messages": [
+        "ok",
+        "ok",
+        "ok",
+        "error",
+        "error",
+        "degraded"
+      ]
+    },
+    {
+      "component": "explanation",
+      "status": "degraded",
+      "messages": [
+        "ok",
+        "ok",
+        "ok",
+        "degraded",
+        "degraded",
+        "error"
+      ]
+    },
+    {
+      "component": "explanation",
+      "status": "degraded",
+      "messages": [
+        "ok",
+        "ok",
+        "ok",
+        "degraded",
+        "degraded",
+        "error"
+      ]
+    }
+  ],
+  "rl": {
+    "simulation_only": true,
+    "seed": 42,
+    "episodes": 3000,
+    "actions": [
+      "Dinh dưỡng",
+      "Vận động",
+      "Theo dõi"
+    ],
+    "policy": [
+      1,
+      2,
+      2,
+      1,
+      0,
+      2
+    ],
+    "learned_expected_reward": 0.6833333333333332,
+    "random_expected_reward": 0.5222222222222223,
+    "reward_definition": "Bernoulli synthetic educational preference; gamma=0"
+  },
+  "conflict_example": {
+    "prediction": {
+      "score": 0.049488994155590924,
+      "label": 0,
+      "threshold": 0.4022260823734625,
+      "model_version": "272daa5347ca"
+    },
+    "flags": [
+      {
+        "id": "R02",
+        "text": "HbA1c đạt ngưỡng tham khảo từ 6,5%. Cần nhân viên y tế đánh giá và xác nhận.",
+        "needs_review": true,
+        "source": "K22",
+        "review_status": "Luật học thuật, chưa được chuyên gia y tế duyệt"
+      },
+      {
+        "id": "R04",
+        "text": "Chưa rõ thời điểm đo glucose. Cần bổ sung thông tin trước khi đối chiếu ngưỡng lúc đói.",
+        "needs_review": true,
+        "source": "K23",
+        "review_status": "Luật học thuật, chưa được chuyên gia y tế duyệt"
+      },
+      {
+        "id": "R09",
+        "text": "Mô hình phân loại thấp nhưng xét nghiệm đạt ngưỡng tham khảo. Kết quả cần được xem lại.",
+        "needs_review": true,
+        "source": "K22",
+        "review_status": "Luật học thuật, chưa được chuyên gia y tế duyệt"
+      }
+    ],
+    "trace": [
+      "PatientDataAgent",
+      "DLPredictionAgent",
+      "RuleBasedAgent",
+      "KGRAGAgent",
+      "KGRAGAgent",
+      "ExplanationAgent",
+      "MonitoringAgent"
+    ]
+  },
+  "note": "Local JSON backend. Faults injected in process methods. No live provider test."
+}

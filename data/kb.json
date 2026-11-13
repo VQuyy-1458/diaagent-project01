@@ -187,5 +187,23 @@
     "keys": "yếu tố nguy cơ tiền sử gia đình di truyền",
     "url": "https://nhathuoclongchau.com.vn/bai-viet/dai-thao-duong-la-gi-nhung-yeu-to-nguy-co-dai-thao-duong-ma-ban-nen-biet.html",
     "source": "Nhà thuốc FPT Long Châu"
+  },
+  {
+    "id": "K22",
+    "topic": "Xét nghiệm",
+    "title": "Ngưỡng HbA1c tham khảo",
+    "text": "CDC nêu HbA1c dưới 5,7% thuộc mức bình thường, 5,7–6,4% thuộc tiền đái tháo đường và từ 6,5% thuộc ngưỡng đái tháo đường. Kết quả cá nhân cần nhân viên y tế đánh giá và xác nhận.",
+    "keys": "ngưỡng hba1c a1c 6.5 tiền đái tháo đường",
+    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+    "source": "CDC"
+  },
+  {
+    "id": "K23",
+    "topic": "Xét nghiệm",
+    "title": "Ngưỡng glucose phụ thuộc thời điểm đo",
+    "text": "CDC nêu glucose lúc đói từ 126 mg/dL và glucose bất kỳ từ 200 mg/dL thuộc ngưỡng tham khảo đái tháo đường. Cần biết thời điểm đo và được nhân viên y tế xác nhận. Dataset không ghi thời điểm đo glucose.",
+    "keys": "ngưỡng glucose lúc đói bất kỳ thời điểm đo đường huyết",
+    "url": "https://www.cdc.gov/diabetes/diabetes-testing/index.html",
+    "source": "CDC"
   }
 ]
