@@ -150,7 +150,7 @@ def analysis(values=None):
                '<label>Trường so sánh<select name="compare_field"><option value="blood_glucose_level">Glucose máu</option>'
                f'<option value="bmi"{selected}>BMI</option></select></label>'
                f'<label>Giá trị giả định<input name="compare_value" inputmode="decimal" value="{value}"></label></details>')
-    return page("Hệ đa tác tử hỗ trợ đái tháo đường","DiaAgent v2 kết hợp mô hình, cờ luật, bằng chứng và giám sát từng lượt.",
+    return page("Hệ đa agent hỗ trợ đái tháo đường","DiaAgent v2 kết hợp mô hình, cờ luật, bằng chứng và giám sát từng lượt.",
                 f'{architecture_overview()}<div class="columns"><form class="panel" method="post"><span class="tag">HỒ SƠ GIẢ ĐỊNH</span><h2>Dữ liệu đầu vào</h2>'
                 f'<div class="fields">{inputs}</div>'
                 '<label>Thời điểm đo glucose<select name="glucose_timing"><option value="unknown">Chưa rõ</option>'
